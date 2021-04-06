@@ -34,7 +34,7 @@ s'enviaran com a commentaris en el Pull Requests. S'ha de fer Peer Review dels P
 
 Avaluació pràctica 2.
 ---------------------------
-- 50% Fer els enviaments de deures i exercicis setmanals propostos.
+- 50% Fer els enviaments de deures i exercicis setmanals proposats.
 - 50% Lliurament final: 20% Sessió de Test, 80% codi final.
 
 Notació usada en aquest tutorial: 
