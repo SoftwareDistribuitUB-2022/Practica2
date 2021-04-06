@@ -51,8 +51,12 @@ from flask import *
 
 Sessió 1
 =========
-- [Sessió 1](Sessio_1.md)
+- [Sessió 1](https://github.com/SoftwareDistribuitUB/2021-Practica2/blob/main/Sessio_1.md)
 
 Sessió 2
 =========
-- [Sessió 2](Sessio_2.md)
+- [Sessió 2](https://github.com/SoftwareDistribuitUB/2021-Practica2/blob/main/Sessio_2.md)
+
+Sessió 3
+=========
+- [Sessió 3](https://github.com/SoftwareDistribuitUB/2021-Practica2/blob/main/Sessio_3.md)
