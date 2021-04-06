@@ -52,3 +52,7 @@ from flask import *
 Sessió 1
 =========
 - [Sessió 1](Sessio_1.md)
+
+Sessió 2
+=========
+- [Sessió 2](Sessio_2.md)
