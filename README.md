@@ -51,12 +51,32 @@ from flask import *
 
 Sessió 1
 =========
-- [Sessió 1](https://github.com/SoftwareDistribuitUB/2021-Practica2/blob/main/Sessio_1.md)
+- 7 d'abril [Sessió 1](https://github.com/SoftwareDistribuitUB/2021-Practica2/blob/main/Sessio_1.md)
 
 Sessió 2
 =========
-- [Sessió 2](https://github.com/SoftwareDistribuitUB/2021-Practica2/blob/main/Sessio_2.md)
+- 14 d'abril [Sessió 2](https://github.com/SoftwareDistribuitUB/2021-Practica2/blob/main/Sessio_2.md)
 
 Sessió 3
 =========
-- [Sessió 3](https://github.com/SoftwareDistribuitUB/2021-Practica2/blob/main/Sessio_3.md)
+- 21 d'abril [Sessió 3](https://github.com/SoftwareDistribuitUB/2021-Practica2/blob/main/Sessio_3.md)
+
+Sessió 4
+=========
+- 28 d'abril [Sessió 4](https://github.com/SoftwareDistribuitUB/2021-Practica2/blob/main/Sessio_4.md)
+
+Sessió 5
+=========
+- 5 de Maig [Sessió 5](https://github.com/SoftwareDistribuitUB/2021-Practica2/blob/main/Sessio_5.md)
+
+Sessió 6
+=========
+- 12 de Maig [Sessió 6](https://github.com/SoftwareDistribuitUB/2021-Practica2/blob/main/Sessio_6.md)
+
+Sessió 7
+=========
+- 19 de Maig [Sessió 7](https://github.com/SoftwareDistribuitUB/2021-Practica2/blob/main/Sessio_7.md)
+
+Sessió de Test
+=========
+- 26 de Maig [Sessió Test](https://github.com/SoftwareDistribuitUB/2021-Practica2/blob/main/Sessio_Test.md)
