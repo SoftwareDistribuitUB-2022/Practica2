@@ -106,12 +106,12 @@ shows = [
     {'id': 0,
      'name': 'De què parlem mentre no parlem de tota aquesta merda',
      'date': '2021-07-03',
-     'place':[],
+     'place': [],
      'artist': []},
     {'id': 1,
      'name': 'El gran Circ',
    	  'date': '2021-07-04',
-	  'place':[],
+	  'place': [],
      'artist': []}
 ]
 ```
