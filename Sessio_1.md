@@ -134,14 +134,13 @@ Amb aquesta línia forcem la nostra aplicació al port 5000 i indiquem que estem
 ### Exercici 2:
 
 Afegiu dos URL nous al vostre `app.py` especificant que utilitzeu un GET HTTP
-per a l'obtenció de les dades (afegiu aquesta opció `method = ['GET']` a
-`@app.route` amb aquestes noves funcions):
+per a l'obtenció de les dades (afegiu aquesta opció `methods = ['GET']` a
+`@app.route` en aquestes noves rutes):
 
 - http://127.0.0.1:5000/artists: ha de tornar tots els artistes en format JSON
-     (consell: `return  'artists': artists`).
+     (consell: `return  {'artists': artists}`).
 
-- http://127.0.0.1:5000/shows: ha de tornar tot en format JSON
-     mostra (es pot aplicar el mateix consell).
+- http://127.0.0.1:5000/shows: ha de tornar tots els espectacles en format JSON (es pot aplicar el mateix consell).
 
 Proveu amb el paquet `requests` per validar que les dades retornades són les esperades.
 El paquet `requests` us permeten enviar sol·licituds HTTP amb molta facilitat. Com a exemple podeu escriure això en una consola interactiva de python. 
@@ -165,7 +164,7 @@ Es recomana l'ús de Flask-RESTFul per a APIs més complexes.
 
 Abans de poder utilitzar Flask-RESTFul i les seves funcions, haureu d'instal·lar-lo:
 
-    pip install flask_restful
+    pip install flask-restful
 
 La forma d'especificar URL i mètodes a Flask-RESTful és per classes anomenades `Resources`. Això sol correspondre amb una url (amb les seves variables d’entrada com veurem) i en cada recurs escrivim els diferents tipus de sol·licituds HTTP que necessitem en cada cas:
 
@@ -187,7 +186,7 @@ Vegem aquesta estructura de recursos de classe en el nou fitxer `app.py`:
 ```python
 from flask import Flask
 from flask_restful import Resource, Api
-from data import artists, events
+from data import artists, shows, places
 
 app = Flask(__name__)
 api = Api(app)
@@ -246,7 +245,7 @@ Fixeu-vos els continguts d' artists, shows i places:
 Fixeu-vos que són llistes, i cada element és un diccionari.
 	
 	>>> type(artists)
-	>>> artists[1:3] 
+	>>> artists[1:3] 
 
 
 Podem recórrer una llista per trobar la informació desitjada. Per exemple, torneu una llista nova amb tots els artistes d’Espanya:
@@ -266,7 +265,7 @@ O retornar artistes d'una disciplina concreta:
 
 
 
-Podeu afegir o eliminar elements d'una llista mitjantçant les funcions append o pop:
+Podeu afegir o eliminar elements d'una llista mitjantçant les funcions append o pop i remove.
 
 És important entendre que en aquest moment no fem servir persistència de dades i que si tanqueu Python Console quan la torneu a obrir, totes les modificacions que hàgiu fet a les vostres dades desapareixeran.
 
@@ -308,7 +307,7 @@ parser = reqparse.RequestParser() #create parameters parser from request
 
 parser.add_argument('name', type=str, required = True, help = "This field cannot be left blanck")
 parser.add_argument('country', type = str)
-parser.add_argument('discipline', type = str, action="append") #action = "append" is needed to determine that is a list of strings
+parser.add_argument('disciplines', type = str, action="append") #action = "append" is needed to determine that is a list of strings
 
 data = parser.parse_args()
 ```
@@ -316,16 +315,17 @@ data = parser.parse_args()
 Aquesta variable `data` contindrà totes les dades que s'han enviat pel request, podem obtenir els seus valors amb:
 data['name'], data['country'], etc.
 
-Usant aquest codi, feun una nova variable `new_artist` i afegiu-la a la llisa d'artistes.  
+### Exercici 4: 
+
+Usant aquest codi, feu una nova variable `new_artist` i afegiu-la a la llisa d'artistes.  
 Però primer comproveu si ja existeix un artista amb aquest identificador. Si hi ha un altre artista amb el mateix identificador, envieu un missatge amb informació sobre aquest problema i un codi d'error:
 
-    {'message': "Artist with id [{}] Not found".format(id)} 
+    {'message': "Artist with id [{}] already exists".format(id)} 
 
 En cas contrari, afegiu l'artista, torneu l'artista afegit i el codi OK.
 
-### Exercici 4: 
 
-Proveu el mètodo post fent servir `requests` o una altra eina per fer tests d'APIs tot afegint la següent informació al cos del request:
+Proveu el mètode post fent servir `requests` o una altra eina per fer tests d'APIs tot afegint la següent informació al cos del request:
 
 ``` html
 {
