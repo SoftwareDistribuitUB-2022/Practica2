@@ -367,6 +367,6 @@ Deures per a la propera setmana
 
   Creeu els espectacles nous amb les llistes d'artistes i de llocs buides.
     
-6.  Creeu tres recursos nous: ArtistList, PlaceList i ShowList amb un mètode capaç de mostrar tota la informació d'artistes i espectacles en les URLs `artists`, `places` i `shows`.
+6.  Creeu tres recursos nous: ArtistList, PlaceList i ShowList amb un mètode capaç de mostrar tota la informació d'artistes, llocs i espectacles en les URLs `artists`, `places` i `shows`.
 
 7.  Proveu i comproveu tots els mètodes desenvolupats amb `requests` o una altra eina de prova d'APIs.
