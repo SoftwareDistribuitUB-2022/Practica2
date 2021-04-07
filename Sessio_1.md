@@ -84,7 +84,7 @@ artists = [
     {'id': 3,
      'name': 'Dagoll Dagom',
      'country': 'Spain',
-     'disciplines': ['MUSIC', 'THETRE','DANCE']}
+     'disciplines': ['MUSIC', 'THEATRE','DANCE']}
 ]
 
 places=[
