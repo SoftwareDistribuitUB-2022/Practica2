@@ -339,6 +339,7 @@ Recordeu que el paràmetre id prové de la pròpia URL.
 
 Deures per a la propera setmana
 --------
+Poseu totes les classes Resources en una carpeta anomenada resources i feu els imports necessaris en el app.py per afegir els recursos a l'api.  
 
 1. Afegiu al mètode POST l'opció per afegir un artista nou sense especificar cap identificador. En aquest cas, li donarem com a  identificador l'id màxim de la llista +1. (Consell: modifiqueu el vostre codi amb:)
 
