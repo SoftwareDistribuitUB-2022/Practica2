@@ -83,10 +83,10 @@ Mireu aquesta estructura:
 que indica que només pot tenir els valors definits en una enumeració. En el nostre cas, definirem aquesta enumeració com a tupla Python:
 
     ```python
-    discipline = ('THEATRE', 'MUSIC', 'DANCE', 'CIRCUS', 'OTHER')
+    disciplines = ('THEATRE', 'MUSIC', 'DANCE', 'CIRCUS', 'OTHER')
     ```
 
-Afegeix `discipline` in `artist.py` abans de  la definició d' ArtistModel.
+Afegeix `disciplines` in `artist.py` abans de  la definició d' ArtistModel.
 En aquesta versió d’estructura només tindrem una disciplina per artista per simplificar el nostre model.
  
 Finalment, afegirem alguns paràmetres de configuració més a les nostres columnes:
@@ -132,7 +132,7 @@ Definiu també `country` i `discipline` com a  no `nullable`.
 
 3.  Definiu els mètodes `__init__`.
 
-4.  Definiu una `UniqueConstraint` per a evitar l'existència d'un event amb el mateix (`’name’,’date’,’price’`) afegint a ShowModel sota el nom de la taula:
+4.  Definiu una `UniqueConstraint` per a evitar l'existència d'un espectacle amb el mateix (`’name’,’date’,’price’`) afegint a ShowModel sota el nom de la taula:
 
     ```python
     __table_args__ = (db.UniqueConstraint('name', 'date', 'price'),)
@@ -157,7 +157,7 @@ Definiu també `country` i `discipline` com a  no `nullable`.
 
 3.  Definiu els mètodes `__init__`.
 
-4.  Definiu una `UniqueConstraint` per a evitar l'existència d'un event amb el mateix (`’name’,’city’,’country’,'capacity'`) afegint-ho a PlaceModel:
+4.  Definiu una `UniqueConstraint` per a evitar l'existència d'un lloc amb el mateix (`’name’,’city’,’country’,'capacity'`) afegint-ho a PlaceModel:
 
     ```python
     __table_args__ = (db.UniqueConstraint('name', 'city', 'country','capacity'),)
@@ -237,7 +237,7 @@ allà:
 
 ```python
  from models.artist import ArtistModel
- from models.event import EventModel  #also import table created with many-to-many relationship
+ from models.show import ShowModel  #also import table created with many-to-many relationship
 ```
 
 Afegiu `Migration` i la inicialització del ORM SqlAlchemy després de tots els `app.config`:
@@ -347,7 +347,7 @@ Filtres avançats:
 
 Filtres que fan servir diverses taules enllaçades(`join`):
 
-    >>> artist = ArtistModel.query.join(ArtistModel.Shows).filter(ShowModel.id == 1).filter(ArtistModel.name == 'Txarango').first()
+    >>> artist = ArtistModel.query.join(ArtistModel.shows).filter(ShowModel.id == 1).filter(ArtistModel.name == 'Txarango').first()
     >>> artist
     <ArtistModel 2>
     >>> artist.name
@@ -356,9 +356,9 @@ Filtres que fan servir diverses taules enllaçades(`join`):
 Filtres sense especificar "first()" o "all()" són només consultes SQL que
 SQLAlchemy crea a partir del nostre filtre:
 
-    >>> ArtistModel.query.join(ArtistModel.Shows).filter(ShowModel.id == 1).filter(ArtistModel.name == 'Txarango')
+    >>> ArtistModel.query.join(ArtistModel.shows).filter(ShowModel.id == 1).filter(ArtistModel.name == 'Txarango')
     <flask_sqlalchemy.BaseQuery object at 0x7f98ed6b5518>
-    >>> print(ArtistModel.query.join(ArtistModel.Shows).filter(ShowModel.id == 1).filter(ArtistModel.name == 'Txarango'))
+    >>> print(ArtistModel.query.join(ArtistModel.shows).filter(ShowModel.id == 1).filter(ArtistModel.name == 'Txarango'))
     SELECT artists.id AS artists_id, artists.name AS artists_name, artists.country AS artists_country, artists.discipline AS artists_discipline 
     FROM artists JOIN artists_in_Shows AS artists_in_Shows_1 ON artists.id = artists_in_Shows_1.artist_id JOIN Shows ON Shows.id = artists_in_Shows_1.show_id 
     WHERE Shows.id = ? AND artists.name = ?
@@ -366,9 +366,9 @@ SQLAlchemy crea a partir del nostre filtre:
 Suprimir un artista d'un show:
 
     >>> show.artists.remove(artist)
-    >>> db.session.add(event)
+    >>> db.session.add(show)
     >>> db.session.commit()
-    >>> artist = ArtistModel.query.join(ArtistModel.Shows).filter(ShowModel.id == 1).filter(ArtistModel.name == 'Txarango').first()
+    >>> artist = ArtistModel.query.join(ArtistModel.shows).filter(ShowModel.id == 1).filter(ArtistModel.name == 'Txarango').first()
     >>> artist
     >>> artist == None
     True
@@ -511,8 +511,8 @@ errors interns. Però primer de tot comproveu que tot el vostre codi sigui
 
     ```python
     api.add_resource(ShowArtistsList, '/show/<int:id>/artists')
-    api.add_resource(ShowArtist, '/show/<int:id_event>/artist/<id_artist>',
-                                '/show/<int:id_event>/artist')
+    api.add_resource(ShowArtist, '/show/<int:id_show>/artist/<id_artist>',
+                                '/show/<int:id_show>/artist')
 
     api.add_resource(ArtistShowsList, '/artist/<int:id>/shows')
     api.add_resource(PlaceShowsList, '/place/<int:id>/shows')

@@ -147,7 +147,7 @@ El paquet `requests` us permeten enviar sol·licituds HTTP amb molta facilitat. 
 ```python
 import requests
 url = "YOUR_URL"
-reponse = requests.get(url)
+response = requests.get(url)
 response.json()
 ```
 
