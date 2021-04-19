@@ -529,8 +529,7 @@ errors interns. Però primer de tot comproveu que tot el vostre codi sigui
         identificador d'artista
 
     -   post: afegir un artista a un espectacle concret donada tota la informació d'un artista en estructura JSON. En el primer cas en que es passen els dos ID, el que es fa amb la part de payload del JSON amb la info de l'artista és simplement COMPROVAR que el que hi ha a la BD amb ID == ID_artist correspon amb el que es rep en el JSON. En cas contrari es dona un error.
-En el segon cas en que no es passa l'ID del artist, s'intenta afegir la info d'artist a la BD, si hi ha algun problema de Constraints ja petarà per la BD i retornarem error, en cas contari s'afegeix l'artista i s'afegeix a la llista de Shows.
-        
+En el segon cas en que no es passa l'ID del artist, s'intenta buscar un artist amb les constraints úniques i s'intenta afegir a Shows si es troba un artista així. En cas contrari retornarem error. Per tant no s'ha d'afegir un artista d'aquesta forma, si no que s'ha d'afegir via un post a Artists.        
 
     -   delete: eliminar un artista concret d'un espectacle concret definit pels seus ids.
 
