@@ -484,7 +484,7 @@ Modifiqueu els nostres recursos anteriors: DEURES
             api.add_resource(ShowList, '/shows')
             
             api.add_resource(Place, '/place/<int:id>', '/place')
-            api.add_resource(PaceList, '/places')
+            api.add_resource(PlaceList, '/places')
             
             
     ```
