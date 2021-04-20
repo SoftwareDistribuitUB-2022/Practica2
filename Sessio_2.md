@@ -451,7 +451,7 @@ Modifiqueu els nostres recursos anteriors: DEURES
 	
 	```python
 	import dateutil.parser
-	yourdate = dateutil.parser.parse(datestring)
+	yourdate = dateutil.parser.parse(formatted_datetime)
 	```
 
 2.  Creeu mètodes a tots els Models per desar o eliminar de la base de dades.
