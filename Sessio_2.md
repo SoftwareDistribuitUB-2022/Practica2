@@ -440,12 +440,11 @@ Modifiqueu els nostres recursos anteriors: DEURES
         return {'id': self.id, 'name': self.name, 'country': self.country, 'disciplines':  [discipline.json() for discipline in self.disciplines]}
 	
 	```                
-	En el cas de serialitzar el datetime farem servir el isoformat per 	que sigui compatible per tothom i a continuació fer un dump:
+	En el cas de serialitzar el datetime farem servir el isoformat per 	que sigui compatible per tothom.
 	
 	```python
 	a_datetime = datetime.datetime.now()
 	formatted_datetime = a_datetime.isoformat()
-	json_datetime = json.dumps(formatted_datetime)
 	```
 	
 	i per passar de String isoformat a datetime:
