@@ -448,7 +448,7 @@ Modifiqueu els nostres recursos anteriors: DEURES
 	json_datetime = json.dumps(formatted_datetime)
 	```
 	
-	i per passar de String isoformat a a datetime:
+	i per passar de String isoformat a datetime:
 	
 	```python
 	import dateutil.parser
