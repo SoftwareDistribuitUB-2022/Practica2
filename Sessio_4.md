@@ -82,8 +82,7 @@ Creeu un bucle V-for per visualitzar cada esdeveniment per separat:
 
 Modifiqueu el codi actual per mostrar els esdeveniments de manera estructurada. Una forma
 podria ser utilitzar targetes (<https://getbootstrap.com/docs/4.0/components/card/>).
-A més, implementeu el botó "Afegeix a la cistella" i afegiu una imatge d'un espectacle que us agradi a cada targeta. Aquest botó també ha d'afegir l'esdeveniment comprat amb la seva informació en una llista de shows_added: []
-tenint en compte l'opció this.shows_added.push (show).
+A més, implementeu el botó "Afegeix a la cistella" i afegiu una imatge d'un espectacle que us agradi a cada targeta. Aquest botó també ha d'afegir l'esdeveniment comprat amb la seva informació en una llista de `shows_added:[]` definida a data() i  tenint en compte que per afegir un nou show feu servir aquesta instrucció `this.shows_added.push(show)`.
 No us preocupeu pel nombre d’entrades disponibles. Més endavant, gestionarem el nombre de tiquets disponibles on haurem de disminuir el nombre de tiquets comprats.
 
 Obtenir dade d'APIs amb AXIOS
@@ -121,19 +120,19 @@ On /shows tornarà la llista de tots els shows que ja heu registrat. Per exemple
 ![image](figures/image006.jpg)
 
 
-A més, afegiu created() fora dels mètodes. Permet que el codi s’executi cada vegada que s’inicialitza la web.
+A més, afegiu created() sota i fora dels mètodes. Permet que el codi s’executi cada vegada que s’inicialitza la web.
 
 ```html
 created() {
     this.getShows();
-  },
+  }
 ```
 
 D’aquesta manera, podeu obtenir les dades de la vostra API.
 
 ###Exercici 2:
 
-Configureu l'aplicació per mostrar els espectacles consumits a `/shows` i suprimiu la llista de shows creats anteriorment.
+Adapteu l'aplicació per mostrar els espectacles consumits a `/shows` i suprimiu la llista de shows creats anteriorment.
 
 Vista de la cistella
 --------
@@ -143,8 +142,8 @@ En aquesta vista, veurem totes les comandes de l'usuari. A més, l'usuari podrà
 ![image](figures/image008.jpg)
 
 Abans de continuar amb la nostra visualització d'espectacles, implementem un model de compte d'usuari per identificar un usuari i guardar les seves comandes comprades.
-En primer lloc, com heu fet anteriorment amb Shows i Artist, creeu un model nou
-anomenat AccountsModel a la carpeta model. En aquest cas, utilitzarem una relació d'un a molts. La taula "Accounts" té les columnes següents:
+En primer lloc, com heu fet anteriorment amb Show o Artist, creeu un model nou
+anomenat AccountsModel a la carpeta model en un fitxer 'accounts.py'. En aquest cas, utilitzarem una relació d'un a molts. La taula "Accounts" té les columnes següents:
 
 ```python
 class AccountsModel(db.Model):  
@@ -163,10 +162,10 @@ class AccountsModel(db.Model):
         self.is_admin = is_admin
 ```
 
-No inicialitzarem AccountModel amb una contrasenya. Veurem a les properes sessions per què, però per al proper exercici només heu de tenir una contrasenya falsa: inicialitzeu la contrasenya de camp a la funció init del model de compte fent "self.password = 'test'".
+No inicialitzarem AccountModel amb una contrasenya. Veurem a les properes sessions per què, però per al proper exercici només heu de tenir una contrasenya falsa: inicialitzeu el camp de la contrasenya a la funció init del AccountModel fent "self.password = 'test'".
 
 ### Exercici 3:
-1. Creeu un mètodo `json()` que retorni en un json els atributs 'username', 'is_admin' i 'available_money'.
+1. Creeu un mètode `json()` que retorni en un json els atributs `username`, `is_admin` i `available_money`.
 
 2. Creeu un mètode per desar les dades en db
 
@@ -204,7 +203,7 @@ I creeu aquests punts finals (endpoints) a `app.py`:
 
 ### Exercici 4:
 
-1. Afegiu un camp nou total_available_tickets al ShowModels que per defecte sigui el nombre de localitats del lloc on s'està fent i feu les actualitzacions necessàries al constructor i a Show(Resource)
+1. Afegiu un camp nou `total_available_tickets` al ShowModels que per defecte sigui el nombre de localitats del lloc on s'està fent i feu les actualitzacions necessàries al constructor i a Show(Resource)
 	`total_available_tickets = db.Column(db.Integer)`
 2.	Creeu un recurs nou anomenat ordres.py, on els arguments necessaris siguin:
 
@@ -228,14 +227,13 @@ I creeu aquests punts finals (endpoints) a `app.py`:
 
         5. Actualitzeu les entrades disponibles (- entrades comprades)
 
-        6. Actualitzeu els diners de l'usuari després de comprar els bitllets (bitllets -preu *)
-            comprat)
+        6. Actualitzeu els diners de l'usuari després de comprar els bitllets (-preu * bitllets comprat)
 
-        7. Inicialitzar OrdersModel (id_show, tickets_bought)
+        7. Inicialitzar `OrdersModel(id_show, tickets_bought)`
 
-        8. Afegiu una comanda a la relació d'usuari user.orders.append(new_order)
+        8. Afegiu la comanda a la relació d'usuari `user.orders.append(new_order)`
 
-        9. Deseu la comanda, l'espectacle i l'usuari. Atenció amb les condicions de carrera! Feu una única sessió per fer tots els canvis a la BD en la mateixa transacció. No useu els mètodes save_to_db() dels models, sino feu una única sessió, afegiu tots els canvis, feu el commit i comproveu si es provoca algun error, en aquest cas caldra fer un rollback i tornar-ho a intentar o retornar un error.
+        9. Deseu la comanda, l'espectacle i l'usuari a la BD. **Atenció!** amb les condicions de carrera! Feu una única sessió per fer tots els canvis a la BD en la mateixa transacció. No useu els mètodes save_to_db() dels models, sino feu una única sessió, afegiu tots els canvis, feu el commit i comproveu si es provoca algun error, en aquest cas caldra fer un rollback i tornar-ho a intentar o retornar un error.
 
         10. Tornar el json de la nova comanda
 4. Creeu una classe OrdersList (recurs) per retornar totes les comandes disponibles
