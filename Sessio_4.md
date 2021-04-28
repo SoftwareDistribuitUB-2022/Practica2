@@ -62,7 +62,7 @@ Creeu un bucle V-for per visualitzar cada esdeveniment per separat:
 ```html
 <div class="container">
     <div class="row">
-      <div class="col-lg-4 col-md-6 mb-4" v-for="(show) in shows" :key="event.id">
+      <div class="col-lg-4 col-md-6 mb-4" v-for="(show) in shows" :key="show.id">
         <br>
         <h6>{{ show.name }}</h6>
         <div v-for="(artist) in show.artists" :key="artist.id">
@@ -123,8 +123,8 @@ On /shows tornarà la llista de tots els shows que ja heu registrat. Per exemple
 A més, afegiu created() sota i fora dels mètodes. Permet que el codi s’executi cada vegada que s’inicialitza la web.
 
 ```html
-created() {
-    this.getShows();
+created () {
+    this.getShows()
   }
 ```
 
@@ -197,7 +197,7 @@ class OrdersModel(db.Model):
 I creeu aquests punts finals (endpoints) a `app.py`:
 
 ```python
-	api.add_resource(Orders, '/orders/<string:username>')
+	api.add_resource(Orders, '/order/<string:username>')
 	api.add_resource(OrdersList, '/orders')
 ```
 
@@ -205,17 +205,17 @@ I creeu aquests punts finals (endpoints) a `app.py`:
 
 1. Afegiu un camp nou `total_available_tickets` al ShowModels que per defecte sigui el nombre de localitats del lloc on s'està fent i feu les actualitzacions necessàries al constructor i a Show(Resource)
 	`total_available_tickets = db.Column(db.Integer)`
-2.	Creeu un recurs nou anomenat ordres.py, on els arguments necessaris siguin:
-
-    - event_id, type = int, required = True
-
-    - tickets_bought, type = int, required = True 
  
-3. Creeu la classe Orders(Resource) amb els següents mètodes:
+2. Creeu la classe Orders(Resource) amb els següents mètodes:
 
     - GET: retorna totes les comandes per nom d'usuari get(self, username)
 
     - POST: afegeix una nova comanda per nom d'usuari (self, username)
+    	 Creeu el nou recurs , on els arguments necessaris 		 siguin:
+
+    		- show_id, type = int, required = True
+
+    		- tickets_bought, type = int, required = True 
 
         1. Consulteu l'usuari actual: filtreu per nom d'usuari
 
@@ -323,7 +323,7 @@ addPurchase (parameters) {
         .catch((error) => {
           // eslint-disable-next-line
           console.log(error)
-          this.getEvents()
+          this.getShows()
         })
     },
 ```
@@ -366,4 +366,6 @@ Ara tenim la informació per actualitzar els diners disponibles de l’usuari de
 
 La funció finalizePurchase està cridant la funció addPurchase per cada ordre que hi ha a la cistella. Això ens pot portar varis problemes, 1er que l'Usuari es quedi sense diners a mitja cistella i 2on que es produiran n peticions consecutives a flask en que es podria entrar en una condició de carrera en la variable de diners disponibles per l'usuari.
 
-1. Per millorar això, en comptes de fer n crides post a order, feu un mètode post a OrdersList(Resource) i passeu-li una llista d'ordres per ser afegides a la base dades. En el for del vue afegiu en un json la llista d'ordres i feu una única crida a post per enviar totes les dades de cop. En el backend podeu comprovar que el total de les ordres sigui suficent pels diners de l'usuari.
+1. Per millorar això, en comptes de fer n crides post a order, feu un mètode **post** a OrdersList(Resource) i passeu-li una llista d'ordres per ser afegides a la base dades. En el for del vue afegiu en un json la llista d'ordres i feu una única crida a post per enviar totes les dades de cop. En el backend podeu comprovar que el total de les ordres sigui suficent pels diners de l'usuari.
+
+`api.add_resource(OrdersList, '/orders/<string:username>/')`
