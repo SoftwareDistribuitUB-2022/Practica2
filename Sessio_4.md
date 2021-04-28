@@ -339,6 +339,8 @@ Ara tenim la informació per actualitzar els diners disponibles de l’usuari de
                 tickets_bought: this.shows_added.items[i].quantity
             }
             this.addPurchase(parameters)
+        }
+     }
     ```
 
 3.  Initialize cart and deactivate button
