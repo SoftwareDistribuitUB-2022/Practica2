@@ -82,7 +82,7 @@ Creeu un bucle V-for per visualitzar cada esdeveniment per separat:
 
 Modifiqueu el codi actual per mostrar els esdeveniments de manera estructurada. Una forma
 podria ser utilitzar targetes (<https://getbootstrap.com/docs/4.0/components/card/>).
-A més, implementeu el botó "Afegeix a la cistella" i afegiu una imatge d'un espectacle que us agradi a cada targeta. Aquest botó també ha d'afegir l'esdeveniment comprat amb la seva informació en una llista de `shows_added:[]` definida a data() i  tenint en compte que per afegir un nou show feu servir aquesta instrucció `this.shows_added.push(show)`.
+A més, implementeu el botó "Afegeix a la cistella" i afegiu una imatge d'un espectacle que us agradi a cada targeta. Aquest botó també ha d'afegir l'esdeveniment comprat amb la seva informació en una llista de `shows_added:[]` definida a data() i  tenint en compte que per afegir un nou show feu servir aquesta instrucció `this.shows_added.push(show)`. Associeu una funció `addEventToCart` que faci això quan es cliqui al botó.
 No us preocupeu pel nombre d’entrades disponibles. Més endavant, gestionarem el nombre de tiquets disponibles on haurem de disminuir el nombre de tiquets comprats.
 
 Obtenir dade d'APIs amb AXIOS
@@ -241,7 +241,7 @@ I creeu aquests punts finals (endpoints) a `app.py`:
 Vista taula de la cistella
 ----------
 
-Taula on l'usuari pot visualitzar la seva comanda i la seva informació. En aquesta taula, podem veure:
+Ara ja podem tornar a editar el nostre frontend. Fem la taula on l'usuari pot visualitzar la seva comanda i la seva informació. En aquesta taula, podem veure:
 
 1. **Nom de l'espectacle**
 
@@ -254,7 +254,7 @@ Taula on l'usuari pot visualitzar la seva comanda i la seva informació. En aque
 5. **Eliminar entrada**: botó per suprimir l'espectacle, l'espectacle desapareix de la llista
 
 Per crear aquesta taula, podeu utilitzar l'estructura clàssica
-(<https://www.w3schools.com/html/html_tables.asp>). "<thead>" conté les capçaleres:
+(<https://www.w3schools.com/html/html_tables.asp>). `<thead>` conté les capçaleres:
 
 ```html
 <thead>
@@ -273,22 +273,40 @@ interactuar (augmentar, disminuir)
 
 ### Exercici 5: 
 
-1. Creeu una taula amb esdeveniments i la seva informació
+1. Creeu una taula amb espectacles i la seva informació
 
-2. Creeu mètodes i botons per augmentar i disminuir
+2. Creeu els botons per augmentar i disminuir número d'entrades pels esdeveniments en la cistella i els seus mètodes associats quan es faci click.
 
 Botó de tornar enrere
 -----------
 
 Creem un botó per tornar a la vista principal:
 
-1. Creeu una variable anomenada, per exemple, show. Serà el nostre condicional per mostrar la vista d'Espectacles o de Cistella.
+1. Creeu una variable anomenada, per exemple, `isShowingCart`. Serà el nostre condicional per mostrar la vista d'Espectacles o de Cistella.
 
-2. Creeu un mètode per actualitzar l'estat d'aquest condicional i mostreu la part d'Espectacles
+3. Enllaceu la variable creada anteriorment amb un botó nou "Veure cistella" per mostrar la cistella que faci (isShowingCart = True)
 
-3. Enllaceu el mètode creat anteriorment amb un botó nou "Veure cistella" per mostrar la cistella (show = True)
+4. Enllaça la variable creada anteriorment amb un nou botó "Enrere" que faci (isShowingCart = Fals)
 
-4. Enllaça el mètode creat anteriorment amb un nou botó "Enrere" (show = Fals)
+per alternar d'una vista a l'altra, feu servir el v-if   en el `<div>` on es mostri la cistella:
+```html
+	<div v-if=isShowingCart class...> 
+		<h1> Cart </h1>
+		...
+	</div>
+	<div v-else class...>
+		...
+	</div>	
+```
+
+Podeu fer servir v-if en qualsevol tag per que es mostri en cas de ser cert o ocultar-lo en cas de ser fals, per exemple podeu fer que s'activi la taula només si hi ha elements en la taula així:
+```html
+ <table v-if="shows_added.items.length > 0" class=....>
+ </table>
+        <p v-else>Your cart is currently empty.</p>
+ ```
+
+Qualsevol v-else que poseu buscarà l'últim v-if que hi hagi, i el bloc definit per la condició serà des de l'v-if fins al v-else.
 
 Finalitza el botó de compra
 -----
@@ -317,7 +335,7 @@ const parameters = {
           tickets_bought: this.shows_added.items[i].quantity
         }
 ```
-Un cop fet el mètode POST, hauríem de restablir la llista on emmagatzemem
+A continuació, hauríem de restablir la llista on emmagatzemem
 els esdeveniments per comprar i desactivar el botó finalitzar la compra. L'usuari hauria de veure:
 
 ![image](figures/image010.jpg)
@@ -341,7 +359,7 @@ Ara tenim la informació per actualitzar els diners disponibles de l’usuari de
      }
     ```
 
-3.  Initialize cart and deactivate button
+3. Inicialitzar la cistella i desactivar el botó
 
 
 ### Deures:
