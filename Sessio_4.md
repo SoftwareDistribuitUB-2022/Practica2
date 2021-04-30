@@ -213,13 +213,13 @@ I creeu aquests punts finals (endpoints) a `app.py`:
     - POST: afegeix una nova comanda per nom d'usuari (self, username)
     	 Creeu el nou recurs , on els arguments necessaris 		 siguin:
 
-    		- show_id, type = int, required = True
+    		- id_show, type = int, required = True
 
     		- tickets_bought, type = int, required = True 
 
         1. Consulteu l'usuari actual: filtreu per nom d'usuari
 
-        2. Consulteu l'esdeveniment actual: filtreu per show_id
+        2. Consulteu l'esdeveniment actual: filtreu per id_show
 
         3. Comproveu si l'usuari té prou diners per comprar el bitllet
 
@@ -331,7 +331,7 @@ amb els paràmetres:
 
 ```html
 const parameters = {
-          show_id: this.shows_added.items[i].show.id,
+          id_show: this.shows_added.items[i].show.id,
           tickets_bought: this.shows_added.items[i].quantity
         }
 ```
@@ -351,7 +351,7 @@ Ara tenim la informació per actualitzar els diners disponibles de l’usuari de
     finalizePurchase ()  {
         for (let i = 0; i < this.shows_added.items.length; i += 1) {
             const parameters = {
-                show_id: this.shows_added.items[i].show.id,
+                id_show: this.shows_added.items[i].show.id,
                 tickets_bought: this.shows_added.items[i].quantity
             }
             this.addPurchase(parameters)
