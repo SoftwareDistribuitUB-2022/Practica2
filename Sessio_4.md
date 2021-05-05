@@ -369,3 +369,4 @@ La funció finalizePurchase està cridant la funció addPurchase per cada ordre 
 1. Per millorar això, en comptes de fer n crides post a order, feu un mètode **post** a OrdersList(Resource) i passeu-li una llista d'ordres per ser afegides a la base dades. En el for del vue afegiu en un json la llista d'ordres i feu una única crida a post per enviar totes les dades de cop. En el backend podeu comprovar que el total de les ordres sigui suficent pels diners de l'usuari.
 
 `api.add_resource(OrdersList, '/orders/<string:username>/')`
+	

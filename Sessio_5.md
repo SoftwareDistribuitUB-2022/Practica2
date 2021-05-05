@@ -34,19 +34,18 @@ class AccountsModel(db.Model):
 ### Exercici 1:
 
 1. Comproveu o modifiqueu AccountsModel `__init__` (suprimiu la inicialització de contrasenya falsa) i inicialitzeu-ho només amb valors de nom d'usuari, `available_money` i `is_admin`.
-2. Creeu recursos als mètodes `/resources/accounts.py` relacionats amb aquests punts finals:
+2. Creeu recursos als mètodes `/resources/accounts.py` relacionats amb aquests punts finals (afegiu-los a  `app.py`):
 
 ```python
     api.add_resource(Accounts, '/account/<string:username>', '/account')
-                api.add_resource(AccountsList, '/accounts')
+    api.add_resource(AccountsList, '/accounts')
 ```
 
-on els comptes inclouen:
+on s'inclouen:
 
 - **get**(self,username): obtenir informació del compte amb un nom d'usuari
 - **post**(self): creeu un compte nou passant `username` i `password`. Utilitzeu `hash_ password` quan creeu un compte i utilitzeu `save_to_db()` quan deseu un usuari nou (primer heu de crear un usuari nou i després afegir una contrasenya hash mitjançant el mètode `.hash_ password (password)`).
 - **delete**(self,username): suprimiu un compte relacionat amb un nom d'usuari (recordeu també suprimir totes les comandes relacionades).
-
 
 i AccountsList conté:
 
@@ -121,7 +120,7 @@ from db import db, secret_key
 1. Creeu un login.py nou a la carpeta de recursos amb el mètode post (`api.add_ resource(Login, ’/login’)`):
 	- **post**(self):
 		- `username` i `password` com a paràmetres obligatoris de la sol·licitud. 
-		-  Comproveu si aquest "nom d'usuari" i "contrasenya" corresponen a un dels nostres usuaris (utilitzeu **verify\_password**) i retorneu un token vàlid (utilitzeu **generate\_auth\_token**):
+		-  Comproveu si aquest "nom d'usuari" i "contrasenya" corresponen a un dels nostres usuaris (utilitzeu **verify\_password**) i retorneu un token vàlid (utilitzeu **generate\_auth\_token** sobre l'usuari retornat):
 
 	```python
         return {'token': token.decode('ascii')}, 200
@@ -192,7 +191,7 @@ from db import db, secret_key
                {'username': 'user', 'is_admin': 0, 'available_money': 200}],
               {'username': 'admin', 'is_admin': 1, 'available_money': 200}]}
 
-	-  Obteniu el testimoni de /login:
+	-  Obteniu el token de /login:
 
  			>>>r = requests.post('http://127.0.0.1:5000/login', data = {'username':'user', 'password':'1234'})
             >>>r
@@ -205,17 +204,17 @@ from db import db, secret_key
             >>>data['token']
             'eyJhbGciOiJIUzUxMiIsImlhdCI6MTU4ODQ0MzI2MywiZXhwIjoxNTg4NDQzODYzfQ.eyJ1c2VybmFtZSI6InVzZXIxIn0.Ljh3fTLiFlkVNatfdByiosdOUWesjDHMvxr_5SQeml0leGSdByVGFhl4_i7ZNQD0duu_TbdygcmqDYTLqf-XAQ' 
            
-	- Comproveu si el testimoni prové del nostre usuari (el farem servir en altres exercicis):
+	- Comproveu si el token prové del nostre usuari (el farem servir en altres exercicis):
 
 		    >>>from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired)
             >>>my_token = data['token']
-            >>>secret_key = "eioc98u93injniejenufnciijucnuw82"
+            >>>secret_key = "1q2s3f5g7jggujbffrhnbcdgh78jbhd"
             >>>s = Serializer(secret_key)
             >>>data = s.loads(my_token)
             >>>data
             {'username': 'user'}   
             
- ### Punt final dels comptes permesos
+ ### EndPoints amb comprovació de permisos.
  
 Fins ara, totes les dades estaven disponibles per a tots els usuaris que podien fer una sol·licitud. A localhost això no és un problema, però al desplegament permetríem a tots els usuaris que puguin fer una sol·licitud afegir, modificar o eliminar elements de la nostra base de dades.
 Mitjançant un simple HTTPauth i tokens evitarem aquest tipus de sol·licituds no desitjades.
@@ -247,7 +246,7 @@ def get_user_roles(user):
 
 1.  Afegeix codi a **verify\_password(token,password)**:
 	- En el nostre cas no utilitzarem la contrasenya, sinó l’estructura predeterminada que utilitza la biblioteca HTTPBasicAuth.
-	- Donat un token, hem de retornar el compte (objecte sencer) relacionat amb ell (utilitzeu verify\_auth\_token). Si l'usuari existeix, torneu-lo i feu una còpia en una variable global de Flask anomenada g (g.user = usuari). Aquesta variable ens ajudarà a compartir informació entre mètodes i durarà tota la vida de la sol·licitud. Si l'usuari no existeix, no cal retornar res.
+	- Donat un token, hem de retornar el compte (objecte sencer) relacionat amb ell (utilitzeu verify\_auth\_token). Si l'usuari existeix, torneu-lo i feu una còpia en una variable global de Flask anomenada g (`from flask import g` `g.user = usuari`). Aquesta variable ens ajudarà a compartir informació entre mètodes i durarà tota la vida de la sol·licitud. Si l'usuari no existeix, no cal retornar res.
 
 	
 2.  Afegeix codi a **get\_user\_roles(user)**:
@@ -262,15 +261,13 @@ def get_user_roles(user):
 
 	Aquest decorador cridarà **verify\_password** i, com que es defineix un rol, també cridarà **get\_user\_role**. Només podrà utilitzar el mètode POST si és un usuari "registrat" ​​amb rol "usuari". Afegirem un token vàlid al mètode POST per a poder validar aquest usuari.
 
-	- Afegiu seguretat per assegurar-vos que el nom d'usuari utilitzat al punt final i el nom d'usuari que ha generat el token siguin el mateix usuari. Utilitzeu la variable flask g generada per **verify\_ password** (g.user.username). 
+	- Afegiu seguretat per assegurar-vos que el nom d'usuari passat al endpoint i el nom d'usuari que ha generat el token siguin el mateix usuari. Utilitzeu la variable flask g generada per **verify\_password** (g.user.username). Si només fem servir un decorador com a `@auth.login_required()`, només es comprovarà si hi ha un usuari registrat (si té un token vàlid).
 
 	- Si no és el mateix, torneu un "missatge" descriptiu amb codi 400. 
 
 	- Si no ho heu fet abans, assegureu-vos que l'usuari tingui prou diners per comprar i que hi hagi prou bitllets disponibles i torneu el "missatge" descriptiu i el codi si passa això. Comproveu aquests valors fins i tot si us ocupeu d'això a frontend (mai no sabeu quines aplicacions poden utilitzar la vostra API)
 
-	- Si només fem servir un decorador com a `@auth.login_required()`, només es comprovarà si hi ha un usuari registrat (té un token vàlid).
-
-	Podeu comprovar que aquesta part funciona correctament seguint aquests exemples de terminal, però primer obteniu un testimoni vàlid de `/login` i després:
+	Podeu comprovar que aquesta part funciona correctament seguint aquests exemples de terminal, però primer obteniu un token vàlid de `/login` i després:
 
  		>>>from requests.auth import HTTPBasicAuth
     	>>>r = requests.post('http://127.0.0.1:5000/orders/user', data = {'id_show':2, 'tickets_bought':2},auth=HTTPBasicAuth(my_token, ''))
@@ -285,7 +282,7 @@ def get_user_roles(user):
     	 'tickets_bought': 2,
     	 'username': 'user'}
      
-  	Proveu el mateix però amb punts finals de nom d'usuari diferents:
+  	Proveu el mateix però amb endponts amb nom d'usuari diferents:
   
  		>>>r = requests.post('http://127.0.0.1:5000/orders/npujol', data = {'id_event':2, 'tickets_bought':2},auth=HTTPBasicAuth(my_token, ''))
    		 >>>r
@@ -300,7 +297,7 @@ Login Frontend
 
 Comencem pel disseny del component. En primer lloc, creeu-ne un de nou
 component anomenat `Login.vue`. A més, aneu al fitxer `index.js` i afegiu la
-ruta.
+ruta:
 
 ```html
 import Vue from 'vue'
@@ -337,8 +334,7 @@ Si parem atenció a cada botó:
 Botó Sign In
 -------
 
-Comprova si el nostre nom d’usuari i contrasenya ja estan registrats. Per comprovar
-això, primer hem de desar el nom d'usuari i la contrasenya escrits per l'usuari.
+Comprova si el nostre nom d’usuari i contrasenya ja estan registrats. Per comprovar això, primer hem de desar el nom d'usuari i la contrasenya escrits per l'usuari.
 Per fer-ho, podem utilitzar `vmodel=”username”` i `vmodel=”password”`:
 
 ```html
