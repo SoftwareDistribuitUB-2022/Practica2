@@ -169,10 +169,9 @@ from db import db, secret_key
 
   -   En aquest moment podem fer un cop d'ull a l'aspecte d'una contrasenya amb hash:
 
-  		 	>>>new_account.password
+			>>>new_account.password
             '$6$rounds=656000$GelL4xX9ZikfYQ7r$C81e1B9ic.1kXDn3DO2HlsRDazIIWWxI36pIj5cWEkLPDNtPsul/JU8Id1nyWRieZfqK90rv5Dy7zP4OcQG4s1' 
-
-            >>>from sqlalchemy import create_engine
+			  >>>from sqlalchemy import create_engine
             >>>from sqlalchemy.orm import sessionmaker
             >>>engine = create_engine('sqlite:///data.db')
             >>>Session = sessionmaker(bind=engine)
@@ -180,6 +179,7 @@ from db import db, secret_key
             >>>session.add(new_account)
             >>>session.commit()
             >>>session.close()
+            
             
 	- Comproveu si el nou usuari es troba a la taula d'accounts:
 
@@ -193,18 +193,18 @@ from db import db, secret_key
 
 	-  Obteniu el token de /login:
 
- 			>>>r = requests.post('http://127.0.0.1:5000/login', data = {'username':'user', 'password':'1234'})
+			>>>r = requests.post('http://127.0.0.1:5000/login', data = {'username':'user', 'password':'1234'})
             >>>r
             <Response [200]>
-
             >>>r.json()
             {'token': 'eyJhbGciOiJIUzUxMiIsImlhdCI6MTU4ODQ0MzI2MywiZXhwIjoxNTg4NDQzODYzfQ.eyJ1c2VybmFtZSI6InVzZXIxIn0.Ljh3fTLiFlkVNatfdByiosdOUWesjDHMvxr_5SQeml0leGSdByVGFhl4_i7ZNQD0duu_TBdygcmqDYTLqf-XAQ'}
-
             >>>data = r.json()
             >>>data['token']
-            'eyJhbGciOiJIUzUxMiIsImlhdCI6MTU4ODQ0MzI2MywiZXhwIjoxNTg4NDQzODYzfQ.eyJ1c2VybmFtZSI6InVzZXIxIn0.Ljh3fTLiFlkVNatfdByiosdOUWesjDHMvxr_5SQeml0leGSdByVGFhl4_i7ZNQD0duu_TbdygcmqDYTLqf-XAQ' 
-           
+			'eyJhbGciOiJIUzUxMiIsImlhdCI6MTU4ODQ0MzI2MywiZXhwIjoxNTg4NDQzODYzfQ.eyJ1c2VybmFtZSI6InVzZXIxIn0.Ljh3fTLiFlkVNatfdByiosdOUWesjDHMvxr_5SQeml0leGSdByVGFhl4_i7ZNQD0duu_TbdygcmqDYTLqf-XAQ' 
+           	
+
 	- Comproveu si el token prové del nostre usuari (el farem servir en altres exercicis):
+
 
 		    >>>from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired)
             >>>my_token = data['token']
@@ -214,7 +214,7 @@ from db import db, secret_key
             >>>data
             {'username': 'user'}   
             
- ### EndPoints amb comprovació de permisos.
+### EndPoints amb comprovació de permisos.
  
 Fins ara, totes les dades estaven disponibles per a tots els usuaris que podien fer una sol·licitud. A localhost això no és un problema, però al desplegament permetríem a tots els usuaris que puguin fer una sol·licitud afegir, modificar o eliminar elements de la nostra base de dades.
 Mitjançant un simple HTTPauth i tokens evitarem aquest tipus de sol·licituds no desitjades.
