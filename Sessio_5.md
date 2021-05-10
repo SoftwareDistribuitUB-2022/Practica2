@@ -1,7 +1,7 @@
 Sessió 5
 =========
 
-Afeging seguretat al nostre backend
+Afegint seguretat al nostre backend
 --------
 
 En aquesta secció modificarem i afegirem alguns models i funcions al nostre AccountsModel, per afegir seguretat bàsica i autenticació.
@@ -270,7 +270,7 @@ def get_user_roles(user):
 	Podeu comprovar que aquesta part funciona correctament seguint aquests exemples de terminal, però primer obteniu un token vàlid de `/login` i després:
 
  		>>>from requests.auth import HTTPBasicAuth
-    	>>>r = requests.post('http://127.0.0.1:5000/orders/user', data = {'id_show':2, 'tickets_bought':2},auth=HTTPBasicAuth(my_token, ''))
+    	>>>r = requests.post('http://127.0.0.1:5000/order/user', data = {'id_show':2, 'tickets_bought':2},auth=HTTPBasicAuth(my_token, ''))
     	>>>r
     	<Response [201]>
 
@@ -284,7 +284,7 @@ def get_user_roles(user):
      
   	Proveu el mateix però amb endponts amb nom d'usuari diferents:
   
- 		>>>r = requests.post('http://127.0.0.1:5000/orders/npujol', data = {'id_event':2, 'tickets_bought':2},auth=HTTPBasicAuth(my_token, ''))
+ 		>>>r = requests.post('http://127.0.0.1:5000/order/npujol', data = {'id_event':2, 'tickets_bought':2},auth=HTTPBasicAuth(my_token, ''))
    		 >>>r
    		 <Response [400]>
     	>>>r.json()
@@ -331,7 +331,7 @@ Un cop l'estructura estigui llesta, podem dissenyar la vista d'inici de sessió 
 Com podeu veure, tenim dos textos d’entrada i tres botons.
 Si parem atenció a cada botó:
 
-Botó Sign In
+Botó Log In
 -------
 
 Comprova si el nostre nom d’usuari i contrasenya ja estan registrats. Per comprovar això, primer hem de desar el nom d'usuari i la contrasenya escrits per l'usuari.
