@@ -282,9 +282,9 @@ def get_user_roles(user):
     	 'tickets_bought': 2,
     	 'username': 'user'}
      
-  	Proveu el mateix però amb endponts amb nom d'usuari diferents:
+  	Proveu el mateix però amb endponits amb nom d'usuari diferents:
   
- 		>>>r = requests.post('http://127.0.0.1:5000/order/npujol', data = {'id_event':2, 'tickets_bought':2},auth=HTTPBasicAuth(my_token, ''))
+ 		>>>r = requests.post('http://127.0.0.1:5000/order/npujol', data = {'id_show':2, 'tickets_bought':2},auth=HTTPBasicAuth(my_token, ''))
    		 >>>r
    		 <Response [400]>
     	>>>r.json()

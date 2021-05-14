@@ -72,6 +72,7 @@ En el frontend:
     ```
     
     Comproveu que en el backend s'hagi d'estar registrat com a administrador en aquest endpoint:
+    
     ```html
     @auth.login_required(role=admin)
     ```
@@ -121,7 +122,7 @@ El següent botó que hauríem de crear és el botó "Actualitza esdeveniment". 
   
 4. Creeu el mètode **onSubmitUpdate** cridat des del botó Submit.
 
-5. Creeu el mètode **updateShow (paràmetres) **. Ha de cridar a una sol·licitud PUT a <http://localhost:5000/show/show_id>, on `show_id = this.editShowForm.id`. Recordeu afegir paràmetres d'autenticació a la sol·licitud PUT.
+5. Creeu el mètode **updateShow (paràmetres)**. Ha de cridar a una sol·licitud PUT a <http://localhost:5000/show/show_id>, on `show_id = this.editShowForm.id`. Recordeu afegir paràmetres d'autenticació a la sol·licitud PUT.
 
 	```html
     axios.put(path, parameters, {
@@ -179,6 +180,7 @@ A més d’afegir l’artista a l'espectacle, hem de crear l’artista si no exi
             },
     ``` 
 5. Creeu el mètode **onSubmitAddArtistInShow** cridat des del botó Submit com: 
+
 	```html
     	onSubmitAddArtistInShow (evt) {
                 evt.preventDefault()
@@ -189,7 +191,6 @@ A més d’afegir l’artista a l'espectacle, hem de crear l’artista si no exi
                    genre: this.addArtistForm.genre
                 }
                 this.addNewArtist(parameters)
-                this.addArtistInShow(parameters)
                 },
     ```
  
@@ -200,6 +201,8 @@ A més d’afegir l’artista a l'espectacle, hem de crear l’artista si no exi
               auth: {username: this.token}
             })
     ```
+    Tant en el then com en l'error crideu al **addArtistInShow** amb els paràmetres correctes, per afegir l'artista creat en el show on heu clickat el botó
+    
     Comproveu que en el backend s'hagi d'estar registrat com a administrador en aquest endpoint:
     
     ```html
@@ -222,7 +225,9 @@ A més d’afegir l’artista a l'espectacle, hem de crear l’artista si no exi
     ```html
     @auth.login_required(role=admin)
     ```
-8. Afegiu els paràmetres d'"addArtistForm" al mètode **initForm() **
+    
+
+8. Afegiu els paràmetres d'"addArtistForm" al mètode **initForm()**
 
 9. Crideu a **initForm ()** després d'afegir artista a l'espectacle
 
@@ -344,8 +349,7 @@ D'altra banda, l'usuari normal té menys funcionalitats:
 Activeu i desactiveu aquestes funcions afegint una condició dins del botó. Recordeu que ja tenim un booleà per saber si l'usuari és administrador o no ("is_admin"), per exemple:
 
 ```html
-<button>
-         v-if="logged && is_admin==1"
+<button v-if="logged && is_admin==1"
          style="margin: 15px"
          class="btn btn-dark btn-lg"
          @click="eventWhereModifyArtist(event)"
