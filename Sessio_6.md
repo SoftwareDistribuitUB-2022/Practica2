@@ -272,8 +272,8 @@ Ara farem el mateix amb "Suprimeix l'artista a l'esdeveniment ".
     axios.delete(path, {
               auth: {username: this.token}
             })
-    ```
-     Comproveu que en el backend s'hagi d'estar registrat com a administrador en aquest endpoint:
+  ```
+  Comproveu que en el backend s'hagi d'estar registrat com a administrador en aquest endpoint:
     
     ```html
     @auth.login_required(role=admin)
