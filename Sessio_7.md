@@ -65,6 +65,7 @@ whitenoise==3.3.1
 psycopg2==2.8.2
 Flask==1.1.2
 Flask-SQLAlchemy==2.4.1
+SQLAlchemy==1.3.23
 Flask-RESTful==0.3.8
 Flask-Cors==3.0.8
 Flask-Migrate==2.5.3
@@ -168,6 +169,8 @@ We need to prepare our previous code for production.
 * Replace all the links `localhost:5000` in the vue components for `https://<<nomgrup>-ticketmonster>.herokuapp.com/`.
 * Regenerate the vue `/dist` folder: 
 	`npm run build`
+* We need to modify the genre field in the `disciplines.py` in the `models` folder.  
+	`discipline = db.Column(db.Enum(*discipline,name='disciplines_types'), nullable=False)`
 
 #### Creating a Singleton Lock SafeThread to be used in concurrent write requests operation
 
