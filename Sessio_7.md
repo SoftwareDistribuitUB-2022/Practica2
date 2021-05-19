@@ -169,6 +169,7 @@ We need to prepare our previous code for production.
 * Replace all the links `localhost:5000` in the vue components for `https://<<nomgrup>-ticketmonster>.herokuapp.com/`.
 * Regenerate the vue `/dist` folder: 
 	`npm run build`
+* Add the results into STATIC_FOLDER  and  TEMPLATE_FOLDER
 * We need to modify the genre field in the `disciplines.py` in the `models` folder.  
 	`discipline = db.Column(db.Enum(*discipline,name='disciplines_types'), nullable=False)`
 
