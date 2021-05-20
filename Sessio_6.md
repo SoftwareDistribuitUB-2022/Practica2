@@ -21,9 +21,9 @@ En el frontend:
 2. Creeu un formulari amb la `ref =" addShowModal "` per recopilar les dades mitjançant  Forms de bootstrap:
 
 	```html
-  	 <b-modal ref="addEventModal"
-            id="event-modal"
-            title="Add new event"
+  	 <b-modal ref="addShowModal"
+            id="show-modal"
+            title="Add new Show"
             hide-footer>
       <b-form @submit="onSubmit" @reset="onReset" v-if="show">
       <b-form-group  .....
@@ -231,7 +231,7 @@ A més d’afegir l’artista a l'espectacle, hem de crear l’artista si no exi
 
 9. Crideu a **initForm ()** després d'afegir artista a l'espectacle
 
-10. Creeu el mètode **onResetAddArtistInEvent** crdiat des del botó Reset
+10. Creeu el mètode **onResetAddArtistInShow** crdiat des del botó Reset
 
 Ara farem el mateix amb "Suprimeix l'artista a l'esdeveniment ".
 
@@ -239,7 +239,7 @@ Ara farem el mateix amb "Suprimeix l'artista a l'esdeveniment ".
 
 1. Creeu el botó "Suprimeix l'artista a l'espectacle"
 
-2. Crideu al mètode **eventWhereModifyArtist ()** que heu creat anteriorment, cada vegada que premeu el botó "Suprimeix l'artista a l'espectacle".
+2. Crideu al mètode **showWhereModifyArtist ()** que heu creat anteriorment, cada vegada que premeu el botó "Suprimeix l'artista a l'espectacle".
 
 3. Creeu un formulari amb `ref =" deleteArtistModal "` per recopilar les dades mitjançant formularis de boostrap.
 	
@@ -254,10 +254,10 @@ Ara farem el mateix amb "Suprimeix l'artista a l'esdeveniment ".
 5. Crea el mètode **onSubmitDeleteArtistInShow** cridat des del botó Submit com a:
 
 	```html
-    onSubmitDeleteArtistInEvent (evt) {
+    onSubmitDeleteArtistInShow (evt) {
                 evt.preventDefault()
                 this.$refs.deleteArtistModal.hide()
-                this.deleteArtistInEvent()
+                this.deleteArtistInShow()
                 },
     ```
 6. Crea el mètode **deleteNewArtist (paràmetres)**. Ha de cridar a una sol·licitud DELETE a <http://localhost:5000/show/show_id/artist/artist_id>. on:
@@ -352,9 +352,9 @@ Activeu i desactiveu aquestes funcions afegint una condició dins del botó. Rec
 <button v-if="logged && is_admin==1"
          style="margin: 15px"
          class="btn btn-dark btn-lg"
-         @click="eventWhereModifyArtist(event)"
+         @click="showWhereModifyArtist(event)"
          v-b-modal.add-artist-modal>
-         Add Artist to Event
+         Add Artist to Show
       </button>
 ```
 
