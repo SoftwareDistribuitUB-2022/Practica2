@@ -1,7 +1,7 @@
 ---
 author:
-- Irene Pérez, Carlos Borrego, Eloi Puertas
-date: Febrer 2021
+- Blai Ras Jimenez, David Martinez Carpena, Eloi Puertas
+date: Març 2022
 title: Pràctica 2 - Flask and Vue application (Software distribuït)
 ---
 
