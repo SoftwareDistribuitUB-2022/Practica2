@@ -3,7 +3,7 @@ Sessió 2
 
 A la darrera sessió vam conèixer alguns conceptes nous relacionats amb les API i com crear diferents punts finals ('endpoints') per crear i modificar dades. Però, com ja heu notat, hem utilitzat el diccionari com a emmagatzematge i aquest tipus d’estructura no ens permet mantenir la persistència de les dades de les nostres modificacions.
 
-En aquesta sessió, afegirem la persistència de dades mitjançant un sistema de base de dades definit i gestionat pels mòduls de Flask, modificarem els nostres mètodes GET, POST, PUT i DELETE per gestionar espectacles, llocs i artistes amb persistència de dades i crearem nous mètodes per gestionar els `Artists` dins d `Shows (Shows.Artists)`. Finalment, també afegirem nous endpoints relacionats amb aquests nous mètodes.
+En aquesta sessió, afegirem la persistència de dades mitjançant un sistema de base de dades definit i gestionat pels mòduls de Flask, modificarem els nostres mètodes GET, POST, PUT i DELETE per gestionar partits, estadis i equips amb persistència de dades i crearem nous mètodes per gestionar els `Teams` dins d `Matches (Matches.Teams)`. Finalment, també afegirem nous endpoints relacionats amb aquests nous mètodes.
 
 SQLAlchemy: definició de l'estructura de dades mitjançant models
 ------------------------------------------------
@@ -49,155 +49,159 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 SQLAlchemy llegirà la configuració de la nostra aplicació i es connectarà automàticament a la nostra base de dades.
 
-### Definint ArtistModel
+### Definint TeamsModel
 
 En primer lloc, crearem una carpeta `models` al projecte principal per obtenir tots els fitxers de models que hi ha.
 
-En la carpeta `models` creeu  un arxiu `artist.py` on definirem la classe model `ArtistModel` per a interactuar amb l'API  `artist`. Per a importar la base de dades feu:
+En la carpeta `models` creeu  un arxiu `teams.py` on definirem la classe model `TeamsModel` per a interactuar amb l'API  `teams`. Per a importar la base de dades feu:
 
 ```python
 from db import db
 ```
 
-Prenent com a referència l’estructura de dades de la sessió anterior, crearem una taula d’artistes amb 4 variables de classe
-(`id, name, country, discipline`) corresponent a les diferents columnes de la taula.
-Definirem l'estructura "ArtistModel" que defineix el nom de la taula, el nom, el tipus i el nombre de columnes, com ara:
+Prenent com a referència l’estructura de dades de la sessió anterior, crearem una taula d’equips amb 3 variables de classe
+(`id, name, country`) corresponent a les diferents columnes de la taula.
+Definirem l'estructura "TeamsModel" que defineix el nom de la taula, el nom, el tipus i el nombre de columnes, com ara:
 
 ```python
-class ArtistModel(db.Model):
-    __tablename__ = 'artists' #This is table name
+class TeamsModel(db.Model):
+    __tablename__ = 'teams' #This is table name
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30))
     country = db.Column(db.String(30))
-    discipline = db.Column(db.Enum(*disciplines))
 ```
 
 Mireu aquesta estructura:
 
--   `id` es defineix com a  `Integer` i `primary_ key= True`. Això indica que aquest valor s'utilitzarà per enllaçar amb altres taules (en el nostre cas, un enllaç entre "artistes" i "espectacles"). Aquest valor es defineix com a`UNIQUE` per defecte. En cas contrari, no estarem segurs de quin esdeveniment està relacionat amb quin artista.
+-   `id` es defineix com a  `Integer` i `primary_ key= True`. Això indica que aquest valor s'utilitzarà per enllaçar amb altres taules (en el nostre cas, un enllaç entre "equips" i "partits"). Aquest valor es defineix com a `UNIQUE` per defecte. En cas contrari, no estarem segurs de quin esdeveniment està relacionat amb quin equip.
 
 -   `name` i `country` estan definits com a `String` amb una mida màxima de 30. No és obligatori definir una longitud màxima però es recomana.
 
--   `discipline` es defineix com a `Enum`, 
-que indica que només pot tenir els valors definits en una enumeració. En el nostre cas, definirem aquesta enumeració com a tupla Python:
 
-    ```python
-    disciplines = ('THEATRE', 'MUSIC', 'DANCE', 'CIRCUS', 'OTHER')
-    ```
-
-Afegeix `disciplines` in `artist.py` abans de  la definició d' ArtistModel.
-En aquesta versió d’estructura només tindrem una disciplina per artista per simplificar el nostre model.
- 
 Finalment, afegirem alguns paràmetres de configuració més a les nostres columnes:
 
 ```python
 name = db.Column(db.String(30), unique = True, nullable=False)
+country = db.Column(db.String(30), nullable=False)
 ```
 
--   `unique = True`: evita tenir dos artistes amb el mateix nom a la nostra base de dades
+-   `unique = True`: evita tenir dos equips amb el mateix nom a la nostra base de dades
 
 -   `nullable = False`: no permet tenir valors buits en aquesta columna
 
-També podem definir alguns mètodes relacionats amb aquesta taula en funció de les nostres necessitats, però és obligatori definir un mètode `__ init__` per definir com es creen els objectes. Afegiu aquest mètode a ArtistModel:
+També podem definir alguns mètodes relacionats amb aquesta taula en funció de les nostres necessitats, però és obligatori definir un mètode `__ init__` per definir com es creen els objectes. Afegiu aquest mètode a TeamsModel:
 
 ```python
-def __init__(self, name, country, discipline):
+def __init__(self, name, country):
         self.name = name
         self.country = country
-        self.discipline = discipline
 ```
 
 Fixeu-vos que no cal inicialitzar l'identificador, SQLAlchemy ho farà quan desem aquest tipus de dades a la base de dades.
-### Exercise 1: 
+### Exercici 1: 
 
-Definiu també `country` i `discipline` com a  no `nullable`.
+### Definiu MatchModel i CompetitionsModel
 
-### Definiu ShowModel i PlaceModel
+### Exercici 2.1: 
 
-### Exercise 2.1: 
-
-1.  Definiu la classe `ShowModel` a `show.py` dins de la carpeta `models`, amb la taula anomenada `shows` amb aquests paràmetres:
+1.  Definiu la classe `CompetitionsModel` a `competitions.py` dins de la carpeta `models`, amb la taula anomenada `competitions` amb aquests paràmetres (de moment):
 
     -   `id` (Integer and primary_key)
 
     -   `name` (String)
+
+    -   `category` (Enum)
+
+    -   `sport` (Enum)
+
+    `category` i `sport` es defineixen com a `Enum`, que indica que només pot tenir els valors definits en una enumeració. En el nostre cas, les aquestes son:
+
+    ```python
+    categories_list = ("Senior","Junior")
+    sports_list = ("Volleyball","Football","Basketball","Futsal")
+    ```
+    I, per tant, definirem el camps `category` i `sport` de la següent manera:
+
+    ```python
+    category = db.Column(db.Enum(*categories_list),nullable=False)
+    sport = db.Column(db.Enum(*sports_list),nullable=False)
+    ```
+
+    Podeu afegir les categories o esports extres que volgueu.
+    
+2.  Definiu com a no `nullable` els paràmetres que ho necessitin.
+
+3.  Definiu el mètode `__init__`.
+
+4.  Definiu una `UniqueConstraint` per a evitar l'existència d'una competició amb el mateix (`’name’,’category’,’sport’`) afegint-ho a CompetitionsModel:
+
+    ```python
+    __table_args__ = (db.UniqueConstraint('name', 'category', 'sport'),)
+    ```
+
+### Exercici 2.2: 
+    
+1.  Definiu la classe `MatchModel` a `match.py` dins de la carpeta `models`, amb la taula anomenada `matches` amb aquests paràmetres (de moment):
+
+    -   `id` (Integer and primary_key)
 
     -   `date` (DateTime)
 
     -   `price` (Float)
 
+    Més endevant explicarem com afegir els camps `local`,`visitor` i `competition`.
 
 2.  Definiu tots aquests paràmetres com a no `nullable`.
 
-3.  Definiu els mètodes `__init__`.
-
-4.  Definiu una `UniqueConstraint` per a evitar l'existència d'un espectacle amb el mateix (`’name’,’date’,’price’`) afegint a ShowModel sota el nom de la taula:
-
-    ```python
-    __table_args__ = (db.UniqueConstraint('name', 'date', 'price'),)
-    ```
-    ### Exercise 2.2: 
-    
-
-1.  Definiu la classe `PlaceModel` a `place.py` dins de la carpeta `models`, amb la taula anomenada `places` amb aquests paràmetres:
-
-    -   `id` (Integer and primary_key)
-
-    -   `name` (String)
-
-    -   `city` (String)
-
-    -   `country` (String)
-    
-    -   `capacity` (Integer)
-
-
-2.  Definiu tots aquests paràmetres com a no `nullable`.
-
-3.  Definiu els mètodes `__init__`.
-
-4.  Definiu una `UniqueConstraint` per a evitar l'existència d'un lloc amb el mateix (`’name’,’city’,’country’,'capacity'`) afegint-ho a PlaceModel:
-
-    ```python
-    __table_args__ = (db.UniqueConstraint('name', 'city', 'country','capacity'),)
-    ```
 
 ### Definint relacions entre models
 
 Les relacions entre models a SQLAlchemy són enllaços entre dos o més models que permeten als models referenciar-se automàticament.
-Per a la relació entre shows i artistes definirem un tipus de relació anomenada "Molts a molts". Aquest tipus de relació ens permetrà que un artista participi en molts espectacles i que un espectacle pugui tenir més d'un artista. Per a la relació de ShowModel amb PlaceModel farem servir una relació molta a 1, ja que un Show es farà només en una localització i una mateixa localització podrà allotjar diferents espectacles en diferents dates. 
+Fixeu-vos en el següent diagrama de classes de les nostres dades:
 
-### Exercise 3: 
 
-Mireu aquesta definició de relació de molts a molts i definiu-ne un
-relació de molts a molts entre ArtistModel i ShowModel. En el nostre cas, el nom de la relació a ShowModel és "artists" i el backref és "shows". 
+Com podeu veure, tenim dos tipus de relacions:
 
-### Many-to-many example:
+* "Many-To-Many" o "molts a molts" entre equips i competicions, ja que un equip pot participar en una o més competicions i una competició està present en un o més equips. En SQLAlchemy es tradueix de la següent manera:
+
 ```python
+teams_in_competitions = db.Table("teams_in_competitions",
+                                 db.Column("id", db.Integer, primary_key=True),
+                                 db.Column("team_id", db.Integer, db.ForeignKey("teams.id")),
+                                 db.Column("competition_id",db.Integer, db.ForeignKey("competition.id")))
 
-artists_in_events = db.Table('artists_in_events',
-                             db.Column('id', db.Integer, primary_key=True),
-                             db.Column('artist_id', db.Integer, db.ForeignKey('artists.id')),
-                             db.Column('event_id', db.Integer, db.ForeignKey('events.id')))
+class CompetitionsModel(db.Model):
 
-class EventModel(db.Model):
-    __tablename__ = 'events'
+    __tablename__ = 'competition'  # This is table name
+    __table_args__ = (db.UniqueConstraint('name', 'category', 'sport'),)
 
     id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.String(10))
-    name = db.Column(db.String(30))
-    city = db.Column(db.String(30))
-    country = db.Column(db.String(30))
-    artists = db.relationship("ArtistModel",secondary=artists_in_events,backref=db.backref('events'))
-    
-    
+    name = db.Column(db.String(30), nullable=False)
+    category = db.Column(db.Enum(*categories_list),nullable=False)
+    sport = db.Column(db.Enum(*sports_list),nullable=False)
+
+    teams = db.relationship("TeamsModel",secondary=teams_in_competitions,backref=db.backref("competition"))
 ```
-Mireu aquesta definició de relació de molts a 1 i definiu-ne un
-relació de 1 a molts entre PlaceModel i ShowModel. En el nostre cas, el nom de la relació a ShowModel és "place" i la ForeingKey place_id. 
 
+* "One-To-Many" o "d'1 a molts" entre un match i una competició, ja que un match sempre formarà part d'una sola competició però aquesta competició pot tenir un o més matches. També tenim present aquesta relació entre TeamsModel i MatchesModel: un match tindrà sempre un equip local i un equip visitant (_Child class_), però un equip està present en un o més matches (_Parent class_). Aquest tipus de relació no necessita una taula secundària de suport com la de `teams_in_competitions_`. En SQLAlchemy es tradueix de la següent manera:
 
-### Many-to-One example
+```python
+class MatchesModel(db.Model):
+    __tablename__ = 'match' #This is table name
+    __table_args__ = (db.UniqueConstraint('local_id', 'visitor_id', 'competition_id', 'date'),)
+
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.DateTime, nullable=False)
+    price = db.Column(db.Float, nullable=False)
+
+    local_id = db.Column(db.Integer, db.ForeignKey("teams.id"), nullable=False)
+    visitor_id = db.Column(db.Integer, db.ForeignKey("teams.id"), nullable=False)
+    local = db.relationship("TeamsModel",foreign_keys=[local_id])
+    visitor = db.relationship("TeamsModel",foreign_keys=[visitor_id])
+```
+
+De manera general, una relació "Many-to-one" segueix el següent esquema:
 
 ```python
 class Parent(Base):
@@ -210,6 +214,10 @@ class Child(Base):
     __tablename__ = 'child'
     id = Column(Integer, primary_key=True)
 ```
+
+### Exercici 3:
+
+Definiu, seguint l'esquema anterior, la relació "1-to-Many" entre MatchesModel i CompetitionsModel. Amb aquestes noves relacions, creeu/modifiqueu les `UniqueConstraint` de cada model. En els mètodes `__init__`, poseu-hi tots els atributs que no siguin relacions o `ForeignKey`.
 
 
 Migracions: creació / actualització de la nostra estructura d’emmagatzematge de dades
@@ -236,8 +244,9 @@ flask-migrate està buscant aquest fitxer. A més, s’importen els nostres mode
 allà:
 
 ```python
- from models.artist import ArtistModel
- from models.show import ShowModel  #also import table created with many-to-many relationship
+ from models.teams import TeamsModel
+ from models.matches import MatchesModel
+ from models.competitions import CompetitionsModel
 ```
 
 Afegiu `Migration` i la inicialització del ORM SqlAlchemy després de tots els `app.config`:
@@ -279,111 +288,116 @@ Obriu Flask Shell escrivint `flask shell` al terminal o PyCharm
 Terminal (assegureu-vos de fer-ho des de la carpeta principal del projecte). Assegureu-vos que no executeu la API al mateix temps.
 Importeu el nostre "db", inicialitzeu una aplicació i comproveu alguns paràmetres relacionats amb els nostres models després d'importar-los:
 
-    >>>from db import db
+    >>> from db import db
 
-    >>>db
+    >>> db
     
-    >>>app
+    >>> app
    
-    >>> from models.artist import ArtistModel
+    >>> from models.teams import TeamsModel
 
-    >>> ArtistModel
+    >>> TeamsModel
     
-    >>> from models.show import ShowModel
+    >>> from models.show import MatchModel
 
-    >>> ShowModel
+    >>> MatchModel
 
-Creeu alguns artistes i espectacles i deseu-los al nostre emmagatzematge de dades:
+Creeu alguns equips, partits i competicions i deseu-los al nostre emmagatzematge de dades. **Nota**: si durant les següents instruccions obteniu algun error d'esquema i no el podeu solucionar, proveu de suprimir el fitxer `data.db` i la carpeta migrations. Després, torneu a executar les instruccions [inicials](###Executeu-migracions).
 
-    >>>new_artist1 = ArtistModel('La Calòrica','Spain','THEATRE')
-    >>>new_artist2= ArtistModel('Txarango','Spain','MUSIC') 
+    >>> local = TeamsModel('Karasuno', 'Japan')
+    >>> visitor = TeamsModel('Nekoma','Japan') 
  
-    >>>db.session.add(new_artist1)
-    >>>db.session.add(new_artist2)
-    >>>db.session.commit()
+    >>> db.session.add(local)
+    >>> db.session.add(visitor)
+    >>> db.session.commit()
     
     >>> from datetime import datetime
-    >>>new_show1=ShowModel('El gran Circ',datetime.strptime('2021-07-04', "%Y-%m-%d"),'50.0')
-    >>>db.session.add(new_show1)
-    >>>db.session.commit()
+    >>> new_match = MatchesModel(datetime.strptime('2022-07-04', "%Y-%m-%d"),'50.0')
+    >>> db.session.add(new_match)
+    >>> db.session.commit()
+
+    >>> new_competition = CompetitionsModel("Annual Prefectural Volleyball Tournament","Junior","Volleyball")
+    >>> db.session.add(new_competition)
+    >>> db.session.commit()
 
 Creeu algunes consultes senzilles (`filter_ by`):
 
-    >>> ArtistModel.query.filter_by(name="Txarango").first()
-    <ArtistModel 2>
-    >>>artist = ArtistModel.query.filter_by(name="Txarango").first()
-    >>> artist.name, artist.country, artist.discipline
-    ('Txarango', 'Spain', 'MUSIC')
-    >>> artists = ArtistModel.query.filter_by(country='Spain').all()
-    >>> artists
-    [<ArtistModel 1>, <ArtistModel 2>]
-    >>> artists[0].name, artists[1].name
-    ('La Calòrica', 'Txarango')
+    >>> TeamsModel.query.filter_by(name="Karasuno").first()
+    <TeamsModel 2>
+    >>> team = TeamsModel.query.filter_by(name="Karasuno").first()
+    >>> teams.name, teams.country
+    ('Karasuno', 'Japan')
+    >>> teams = TeamsModel.query.filter_by(country='Japan').all()
+    >>> teams
+    [<TeamsModel 1>, <TeamsModel 2>]
+    >>> teamss[0].name, teamss[1].name
+    ('Karasuno', 'Nekoma')
 
-Modifiqueu un artista i deseu-lo:
+Modifiqueu un partit i deseu-lo:
 
-    >>> artist
-    <ArtistModel 2>
-    >>> artist.discipline = "CIRCUS"
-    >>> db.session.add(artist)
+    >>> new_match
+    <MatchesModel 1>
+    >>> new_match.price = 60.0
+    >>> db.session.add(new_match)
     >>> db.session.commit()
-    >>>artist = ArtistModel.query.filter_by(name="Txarango").first()
-    >>> artist.name, artist.country, artist.discipline
-    ('Txarango', 'Spain', 'CIRCUS')
+    >>> match = MatchesModel.query.filter(MatchesModel.price>=60).first()
+    >>> match.price, match.date
+    (60.0, datetime.datetime(2021, 7, 4, 0, 0))
 
-Afegiu artistes a espectacles:
+Creeu les associacions:
 
-    new_show1.artists.append(artist)
-    db.session.add(new_show1)
-    db.session.commit()
+    >>> new_competition.teams.append(local)
+    >>> new_competition.teams.append(visitor)
+    >>> new_competition.match.append(match)
+    >>> db.session.add(new_competition)
 
+
+    >>> new_match.local = local
+    >>> new_match.visitor = visitor
+    >>> new_match.competition = new_competition
+    >>> db.session.add(new_match)
+
+    >>> db.session.commit()
+
+Comproveu que tot i que no hem associat el camp `competition_id` de MatchesModel, SQLAlchemy l'ha establert automàticament al crear la relationship:
+
+    >>> MatchesModel.query.all()[0].competition_id
+    1
 
 Filtres avançats:
 
-    >>> show = ShowModel.query.filter_by(id=1).filter(ShowModel.artists.any(name='Txarango')).first()
-    >>> show.name
-    'El gran Circ'
-
+    >>> match = MatchesModel.query.filter_by(id=1).filter(MatchesModel.teams.any(name='Karasuno')).first()
+    >>> match.competition
+    "Annual Prefectural Volleyball Tournament"
 
 Filtres que fan servir diverses taules enllaçades(`join`):
 
-    >>> artist = ArtistModel.query.join(ArtistModel.shows).filter(ShowModel.id == 1).filter(ArtistModel.name == 'Txarango').first()
-    >>> artist
-    <ArtistModel 2>
-    >>> artist.name
-    'Txarango'
+    >>> competition = CompetitionsModel.query.join(CompetitionsModel.teams).filter(TeamsModel.name=="Karasuno").first()
+    >>> competition.name
+    "Annual Prefectural Volleyball Tournament"
 
-Filtres sense especificar "first()" o "all()" són només consultes SQL que
+Aquesta consulta es tradueix com "Dona'm la primera competició que trobis on participi l'equip amb nom 'Karasuno'".
+
+Filtres **sense especificar "first()" o "all()"** són només consultes SQL que
 SQLAlchemy crea a partir del nostre filtre:
 
-    >>> ArtistModel.query.join(ArtistModel.shows).filter(ShowModel.id == 1).filter(ArtistModel.name == 'Txarango')
-    <flask_sqlalchemy.BaseQuery object at 0x7f98ed6b5518>
-    >>> print(ArtistModel.query.join(ArtistModel.shows).filter(ShowModel.id == 1).filter(ArtistModel.name == 'Txarango'))
-    SELECT artists.id AS artists_id, artists.name AS artists_name, artists.country AS artists_country, artists.discipline AS artists_discipline 
-    FROM artists JOIN artists_in_Shows AS artists_in_Shows_1 ON artists.id = artists_in_Shows_1.artist_id JOIN Shows ON Shows.id = artists_in_Shows_1.show_id 
-    WHERE Shows.id = ? AND artists.name = ?
+    >>> query = CompetitionsModel.query.join(CompetitionsModel.teams).filter(TeamsModel.name=="Karasuno")
+    >>> print(query)
 
-Suprimir un artista d'un show:
+    ``` sql
+    SELECT competition.id AS competition_id, competition.name AS competition_name, competition.category AS competition_category, competition.sport AS competition_sport 
+    FROM competition JOIN teams_in_competitions AS teams_in_competitions_1 ON competition.id = teams_in_competitions_1.competition_id JOIN teams ON teams.id = teams_in_competitions_1.team_id 
+    WHERE teams.name = ?
+    ```
 
-    >>> show.artists.remove(artist)
-    >>> db.session.add(show)
+Suprimir un equip d'una competició:
+
+    >>> competition.teams.remove(local)
+    >>> db.session.add(competition)
     >>> db.session.commit()
-    >>> artist = ArtistModel.query.join(ArtistModel.shows).filter(ShowModel.id == 1).filter(ArtistModel.name == 'Txarango').first()
-    >>> artist
-    >>> artist == None
-    True
-
-Suprimir un artista:
-
-    >>> ArtistModel.query.all()
-    [<ArtistModel 1>, <ArtistModel 2>]
-    >>> artist = ArtistModel.query.filter_by(id=1).first()
-    >>> artist
-    <ArtistModel 1>
-    >>>db.session.delete(artist)
-    >>>db.session.commit()
-    >>> ArtistModel.query.all()
-    [<ArtistModel 2>]
+    >>> competition = CompetitionsModel.query.join(CompetitionsModel.teams).filter(TeamsModel.name=="Karasuno").first()
+    >>> competition.teams
+    [<TeamsModel 2>]
 
 Tanqueu la sessió i sortiu de Terminal:
 
@@ -400,47 +414,86 @@ aquesta ordre:
 I assegureu-vos sempre de tancar la sessió amb la base de dades abans de sortir de
 Terminal.
 
-
 ### Exercici 4:
 
-Canvieu el Model d'Artista de tal forma que es pugui associar més d'una disciplina per artista. Feu les relacions i taules necessàries. Feu-ho de forma similar a la que hem fet servir a Shows per relacionar-los amb artistes o llocs. 
+Creeu un script Python anomenat `add_data.py` a la carpeta principal del projecte que afegeixi automàticament alguns equips, partits i competicions i les seves relacions a la nostra base de dades. Per a fer-ho, modifiqueu el fitxer `data.py` tenint en compte com heu definit els mètodes `__init__` de cada model. A mode d'ajuda, a continuació podeu veure un esquelet de `add_data.py` incomplet:
 
-### Exercici 5:
-
-Creeu un script Python anomenat `add_data.py` a la carpeta principal del projecte que afegeixi automàticament alguns artistes, espectacles i llocs a la nostra base de dades. Assegureu-vos que sigui correcte utilitzant el flask shell abans d’executar-lo.
-
-    python3 add_data.py
-
-
-Afegiu aquestes línies al començament del fitxer `add_ data.py`:
 
 ```python
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-#import models here
+
+#TODO: import models here
+
+import data
+
+import random
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 db.init_app(app)
+
+
+teams = []
+matches = []
+competitions = []
+
+for competition in data.competitions:
+    competitionModel = CompetitionsModel(name=competition["name"],category=competition["category"],sport=competition["sport"])
+    competitions.append(competitionModel)
+
+#TODO: Repeat the process above process for teams and matches!
+
+#Relationships
+for match in matches:
+    #TODO: Choose randomly two different teams from the teams list
+    local = 
+    visitor = 
+    
+    #Assign local and visitor for the current match
+    match.local = local
+    match.visitor = visitor
+
+    #TODO: Choose a random competition
+    random_competition = 
+    #Assign the competition to the match
+    match.competition = random_competition
+
+    #TODO: Append the match to the competition
+    #TODO: Append local and visitor to the competition list of teams 
+
+db.session.add_all(teams)
+db.session.add_all(matches)
+db.session.add_all(competitions)
+db.session.commit()
 ```
 
-Si es produeix algun error fatal i no podeu resoldre el problema,
-proveu de suprimir la carpeta `data.db` i migrations i torneu-la a crear.
+* Recordeu que el paràmetre `date` de MatchesModel només accepta variables de tipus `datetime`.
+
+* Fixeu-vos en el mètode `db.session.add_all(list)` el qual fa només una crida a la base de dades que afegeixi totes les entrades de cop. Després fem `commit()` un cop afegides.
+
+* Executeu el fitxer amb:
+
+    >>> python3 add_data.py
+
+* Podeu comprovar si les dades s'han afegit correctament a la ``flask shell``.
 
 Modifiqueu els nostres recursos anteriors: DEURES
 ---------------------------------------
 
-1.  Creeu els mètodes `def json(self):` a tots els Models, que retorni els seus continguts en format JSON.
+1.  Creeu els mètodes `def json(self):` a tots els Models, que retorni els seus continguts en format JSON. Per exemple, per competitions:
 
 	```python
 	
 	 def json(self):
-        return {'id': self.id, 'name': self.name, 'country': self.country, 'disciplines':  [discipline.json() for discipline in self.disciplines]}
+        return {'id': self.id, 'name': self.name, 'category': self.category, 'sport': self.sport, 'teams':  [teams.json() for teams in self.teams], 'matches': [match.json() for match in self.match]}
 	
 	```                
-	En el cas de serialitzar el datetime farem servir el isoformat per 	que sigui compatible per tothom.
+    **Nota**: compte amb els bucles infinits! Quan realitzis la funció ``json()`` de matches, aquesta imprimirà el nom de la competició, és a dir, ``competition.name``, ja que si posem ``competition.json()`` tornarem a cridar `matches.json()` etc. etc. etc.
+
+	En el cas de serialitzar el datetime farem servir el isoformat per a que sigui compatible per tothom.
 	
 	```python
 	a_datetime = datetime.datetime.now()
@@ -469,35 +522,35 @@ Modifiqueu els nostres recursos anteriors: DEURES
 	El podem utilitzar com:
 	
     ```python
-    		  artist = ArtistModel(...)
-            artist.save_to_db()
+    teams = TeamsModel(...)
+    teams.save_to_db()
     ```
 
 3.  Creeu alguns mètodes de classe amb filtres que us puguin ser d'utilitat en els Models, per exemple:
 
     ```python
     	@classmethod
-       def find_by_id(cls,id):
+       def get_by_id(self,id):
                 #code here
     ```
 
    El podem utilitzar com:
 
     ```python
-    artist = ArtistModel.find_by_id(3)
+    teams = TeamsModel.get_by_id(3)
     ```
 
 4.  Modifiqueu els punts finals (endpoints) de la sessió 1 per utilitzar la nova estructura de dades:
 
     ```python
-    		  api.add_resource(Artist, '/artist/<int:id>', '/artist')
-            api.add_resource(ArtistList, '/artists')
+    		  api.add_resource(Teams, '/team/<int:id>', '/team')
+            api.add_resource(TeamsList, '/teams')
 
-            api.add_resource(Show, '/show/<int:id>', '/show')
-            api.add_resource(ShowList, '/shows')
+            api.add_resource(Competitions, '/competition/<int:id>', '/competition')
+            api.add_resource(CompetitionsList, '/competitions')
             
-            api.add_resource(Place, '/place/<int:id>', '/place')
-            api.add_resource(PlaceList, '/places')
+            api.add_resource(Matches, '/match/<int:id>', '/match')
+            api.add_resource(MatchesList, '/matches')
             
             
     ```
@@ -515,48 +568,48 @@ errors interns. Però primer de tot comproveu que tot el vostre codi sigui
 
     ```python
         try:
-            new_artist.save_to_db()
+            new_teams.save_to_db()
         except:
-            return {"message": "An error occurred inserting the artist."}, 500
+            return {"message": "An error occurred inserting the teams."}, 500
     ```
 
 5.  Creeu aquests nous punts finals i recursos:
 
     ```python
-    api.add_resource(ShowArtistsList, '/show/<int:id>/artists')
-    api.add_resource(ShowArtist, '/show/<int:id_show>/artist/<id_artist>',
-                                '/show/<int:id_show>/artist')
+    api.add_resource(ShowTeamssList, '/show/<int:id>/teamss')
+    api.add_resource(ShowTeams, '/show/<int:id_show>/teams/<id_teams>',
+                                '/show/<int:id_show>/teams')
 
-    api.add_resource(ArtistShowsList, '/artist/<int:id>/shows')
-    api.add_resource(PlaceShowsList, '/place/<int:id>/shows')
+    api.add_resource(TeamsShowsList, '/teams/<int:id>/matches')
+    api.add_resource(PlaceShowsList, '/stadium/<int:id>/matches')
     
     ```
 
-    **ShowArtistsList** :
+    **ShowTeamssList** :
 
-    -   get: retornar tots els artistes en un espectacle, donat el seu identificador
+    -   get: retornar tots els equips en un espectacle, donat el seu identificador
 
-    **ShowArtist**:
+    **ShowTeams**:
 
-    -   get: retornar un artista concret d'un espectacle, amb el seu identificador d'espectacle i
-        identificador d'artista
+    -   get: retornar un equip concret d'un espectacle, amb el seu identificador d'espectacle i
+        identificador d'equip
 
-    -   post: afegir un artista a un espectacle concret donada tota la informació d'un artista en estructura JSON. En el primer cas en que es passen els dos ID, el que es fa amb la part de payload del JSON amb la info de l'artista és simplement COMPROVAR que el que hi ha a la BD amb ID == ID_artist correspon amb el que es rep en el JSON. En cas contrari es dona un error.
-En el segon cas en que no es passa l'ID del artist, s'intenta buscar un artist amb les constraints úniques i s'intenta afegir a Shows si es troba un artista així. En cas contrari retornarem error. Per tant no s'ha d'afegir un artista d'aquesta forma, si no que s'ha d'afegir via un post a Artists.        
+    -   post: afegir un equip a un espectacle concret donada tota la informació d'un equip en estructura JSON. En el primer cas en que es passen els dos ID, el que es fa amb la part de payload del JSON amb la info de l'equip és simplement COMPROVAR que el que hi ha a la BD amb ID == ID_teams correspon amb el que es rep en el JSON. En cas contrari es dona un error.
+En el segon cas en que no es passa l'ID del teams, s'intenta buscar un teams amb les constraints úniques i s'intenta afegir a Shows si es troba un equip així. En cas contrari retornarem error. Per tant no s'ha d'afegir un equip d'aquesta forma, si no que s'ha d'afegir via un post a Teamss.        
 
-    -   delete: eliminar un artista concret d'un espectacle concret definit pels seus ids.
+    -   delete: eliminar un equip concret d'un espectacle concret definit pels seus ids.
 
-    **ArtistShowsLists**:
+    **TeamsShowsLists**:
 
-    -   get: torna tots els espectacles d’un artista, donat el seu identificador
+    -   get: torna tots els partits d’un equip, donat el seu identificador
 
     **PlaceShowsList**:
     
-    - get: torna tots els espectacles en un lloc, donat el seu identificador
+    - get: torna tots els partits en un lloc, donat el seu identificador
 
              
     Recordeu de retornar totes les llistes d'elements a
-    format json amb etiqueta relacionada ("shows" o "artists"), segons
+    format json amb etiqueta relacionada ("matches" o "teamss"), segons
     el tipus d’elements.
 
     ![image](figures/errors.png)
