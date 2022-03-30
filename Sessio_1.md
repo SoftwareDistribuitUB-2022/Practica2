@@ -358,7 +358,7 @@ Poseu totes les classes Resources en una carpeta anomenada resources i feu els i
 3. Escriviu el mètode PUT que, si no existeix aquest identificador, crea un equip nou i l'afegeix a la llista d'equips. En cas contrari, modifica els valors de l'equip amb aquest identificador amb la informació del cos de la sol·licitud del PUT (aquesta informació pot ser completa o parcial!). Retorna l'equip creat o modificat.
 
 
-4.  Escriviu els mètodes GET, POST, DELETE i PUT per a un recurs anomenat Stadium amb la URL:
+4.  Escriviu els mètodes GET, POST, DELETE i PUT per a un recurs anomenat Competition amb la URL:
 
         '/competition/<int:id>'
 
@@ -368,6 +368,6 @@ Poseu totes les classes Resources en una carpeta anomenada resources i feu els i
 
   **Enriquiu al vostre gust les dades d'exemple creant equips, partits i competicions noves**
     
-6.  Creeu tres recursos nous: TeamsList, StadiumList i MatchesList amb un mètode capaç de mostrar tota la informació d'equips, competicions i competicions en les URLs `teams`, `competitions` i `matches`.
+6.  Creeu tres recursos nous: TeamsList, CompetitionsList i MatchesList amb un mètode capaç de mostrar tota la informació d'equips, competicions i competicions en les URLs `teams`, `competitions` i `matches`.
 
 7.  Proveu i comproveu tots els mètodes desenvolupats amb `requests` o una altra eina de prova d'APIs.
