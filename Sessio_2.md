@@ -217,7 +217,9 @@ class Child(Base):
 
 ### Exercici 3:
 
-Definiu, seguint l'esquema anterior, la relació "1-to-Many" entre MatchesModel i CompetitionsModel. Amb aquestes noves relacions, creeu/modifiqueu les `UniqueConstraint` de cada model. En els mètodes `__init__`, poseu-hi tots els atributs que no siguin relacions o `ForeignKey`.
+Definiu, seguint l'esquema anterior, la relació "1-to-Many" entre MatchesModel i CompetitionsModel esmentada. Amb aquestes noves relacions, creeu/modifiqueu les `UniqueConstraint` de cada model. En els mètodes `__init__`, poseu-hi tots els atributs que no siguin relacions o `ForeignKey`. Us podeu guiar del següent esquema:
+
+![image](figures/DiagramaClases.png)
 
 
 Migracions: creació / actualització de la nostra estructura d’emmagatzematge de dades
@@ -543,7 +545,7 @@ Modifiqueu els nostres recursos anteriors: DEURES
 4.  Modifiqueu els punts finals (endpoints) de la sessió 1 per utilitzar la nova estructura de dades:
 
     ```python
-    		  api.add_resource(Teams, '/team/<int:id>', '/team')
+    		api.add_resource(Teams, '/team/<int:id>', '/team')
             api.add_resource(TeamsList, '/teams')
 
             api.add_resource(Competitions, '/competition/<int:id>', '/competition')
@@ -551,67 +553,59 @@ Modifiqueu els nostres recursos anteriors: DEURES
             
             api.add_resource(Matches, '/match/<int:id>', '/match')
             api.add_resource(MatchesList, '/matches')
-            
-            
     ```
-	Recordeu importar models a recursos i suprimir totes les importacions
-relacionat amb `data.py` (ja no l’utilitzarem). 
-	
-	Aquesta vegada les sol·licituds POST i PUT sempre tindran tots els paràmetres. Modifiqueu "reqparse" per indicar que tots els paràmetres són necessaris i afegiu
-informació als paràmetres d’ajuda. Tingueu en compte les
-definicions ("unique = True" i "UniqueConstraint") per evitar errors
-abans d’intentar desar-lo a la base de dades.
 
-	Afegiu `try-catch` quan intenteu desar a la base de dades per evitar
-errors interns. Però primer de tot comproveu que tot el vostre codi sigui
- correcte i no intenteu enviar-hi informació incorrecta
+Ara que tenim la nostre base de dades creada i llesta, hem de suprimir tota importació relacionada amb ``data.py``. Ara, tota la gestió de crear, modificar, eliminar o retornar un objecte (model) de la nostre base de dades es farà a travès de les seves classes ``TeamsModel``, ``MatchesModel`` i ``CompetitionsModel``. Seguirem fent ús de ``reqparse``, però ara les sol·licituds POST i PUT sempre tindran tots els paràmetres. Modifiqueu "reqparse" per indicar que tots els paràmetres són necessaris i afegiu informació als paràmetres d’ajuda:
 
-    ```python
-        try:
-            new_teams.save_to_db()
-        except:
-            return {"message": "An error occurred inserting the teams."}, 500
-    ```
+
+```python
+    parser.add_argument('name', type=str, required=True, help="This field cannot be left blank")
+```
+Tingueu en compte les definicions ("unique = True" i "UniqueConstraint") per evitar errors abans d’intentar desar-lo a la base de dades.
+
+Afegiu `try-catch` quan intenteu desar a la base de dades per evitar errors interns:
+
+```python
+try:
+    new_teams.save_to_db()
+except:
+    return {"message": "An error occurred inserting the teams."}, 500
+```
 
 5.  Creeu aquests nous punts finals i recursos:
 
     ```python
-    api.add_resource(ShowTeamssList, '/show/<int:id>/teamss')
-    api.add_resource(ShowTeams, '/show/<int:id_show>/teams/<id_teams>',
-                                '/show/<int:id_show>/teams')
+    api.add_resource(CompetitionTeamsList, '/competition/<int:id>/teams')
+    api.add_resource(CompetitionTeams, '/competition/<int:id_competition>/team/<id_team>',
+                                '/competition/<int:id_competition>/teams')
 
-    api.add_resource(TeamsShowsList, '/teams/<int:id>/matches')
-    api.add_resource(PlaceShowsList, '/stadium/<int:id>/matches')
+    api.add_resource(TeamMatchesList, '/team/<int:id>/matches')
+    api.add_resource(MatchTeamsList, '/match/<int:id>/teams')
     
     ```
 
-    **ShowTeamssList** :
+    **CompetitionTeamsList** :
 
-    -   get: retornar tots els equips en un espectacle, donat el seu identificador
+    -   get: retornar tots els equips d'una competició, donat el seu identificador
 
-    **ShowTeams**:
+    **CompetitionTeams**:
 
-    -   get: retornar un equip concret d'un espectacle, amb el seu identificador d'espectacle i
-        identificador d'equip
+    -   get: retornar un equip concret donat l'id de competició i d'equip.
 
-    -   post: afegir un equip a un espectacle concret donada tota la informació d'un equip en estructura JSON. En el primer cas en que es passen els dos ID, el que es fa amb la part de payload del JSON amb la info de l'equip és simplement COMPROVAR que el que hi ha a la BD amb ID == ID_teams correspon amb el que es rep en el JSON. En cas contrari es dona un error.
-En el segon cas en que no es passa l'ID del teams, s'intenta buscar un teams amb les constraints úniques i s'intenta afegir a Shows si es troba un equip així. En cas contrari retornarem error. Per tant no s'ha d'afegir un equip d'aquesta forma, si no que s'ha d'afegir via un post a Teamss.        
+    -   post: afegir un equip a una competició concreta donada tota la informació d'un equip en estructura JSON. En el primer cas en que es passen els dos ID, el que es fa amb la part de payload del JSON amb la info de l'equip és simplement COMPROVAR que el que hi ha a la BD amb ID == ID_team correspon amb el que es rep en el JSON. En cas contrari es dona un error.
+    En el segon cas en que no es passa l'ID del equip, s'intenta buscar un equip amb les constraints úniques i s'intenta afegir a la competició. En cas contrari retornarem error.        
 
-    -   delete: eliminar un equip concret d'un espectacle concret definit pels seus ids.
+    -   delete: eliminar un equip d'una competició donat ambdós id's.
 
-    **TeamsShowsLists**:
+    **TeamMatchesList**:
 
     -   get: torna tots els partits d’un equip, donat el seu identificador
 
-    **PlaceShowsList**:
+    **MatchTeamsList**:
     
-    - get: torna tots els partits en un lloc, donat el seu identificador
+    - get: torna tots els equips d'un match, donat el seu identificador
 
-             
-    Recordeu de retornar totes les llistes d'elements a
-    format json amb etiqueta relacionada ("matches" o "teamss"), segons
-    el tipus d’elements.
-
+    Codis d'errors del protocol HTTP:
     ![image](figures/errors.png)
 
 6.  Proveu i comproveu tots els vostres punts finals mitjançant sol·licituds o Postman, i
