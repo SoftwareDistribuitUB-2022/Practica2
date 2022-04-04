@@ -561,6 +561,21 @@ Ara que tenim la nostre base de dades creada i llesta, hem de suprimir tota impo
 ```python
     parser.add_argument('name', type=str, required=True, help="This field cannot be left blank")
 ```
+
+Per exemple, el següent codi mostra com puc crear matches passant o no l'identificador d'equip local o no:
+
+```python
+    parser.add_argument('local_id', type=int, required=False)
+    parser.add_argument('visitor_id', type=int, required=False)
+    data = parser.parse_args()
+
+    match = MatchesModel(datetime.strptime(data["date"], "%Y-%m-%d"), data["price"])
+    if data["visitor_id"] and data["local_id"]:
+        # Create add_teams() method in MatchesModel
+    try:
+        ...
+```
+
 Tingueu en compte les definicions ("unique = True" i "UniqueConstraint") per evitar errors abans d’intentar desar-lo a la base de dades.
 
 Afegiu `try-catch` quan intenteu desar a la base de dades per evitar errors interns:
@@ -576,26 +591,32 @@ except:
 
     ```python
     api.add_resource(CompetitionTeamsList, '/competition/<int:id>/teams')
-    api.add_resource(CompetitionTeams, '/competition/<int:id_competition>/team/<id_team>',
-                                '/competition/<int:id_competition>/teams')
+    api.add_resource(CompetitionMatch, '/competition/<int:id>/match',
+                                    '/competition/<int:id>/match/<int:id>')
 
     api.add_resource(TeamMatchesList, '/team/<int:id>/matches')
     api.add_resource(MatchTeamsList, '/match/<int:id>/teams')
     
     ```
 
+    **Nota**: En tots els següents endpoints s'obvia que sempre es comprovarà que els id's dels diferents models existeixi a la base de dades, i que en cas contrari es retorna el missatge d'error corresponent. 
+
     **CompetitionTeamsList** :
 
     -   get: retornar tots els equips d'una competició, donat el seu identificador
 
-    **CompetitionTeams**:
+    **CompetitionMatch**:
 
-    -   get: retornar un equip concret donat l'id de competició i d'equip.
+    -   get: retorna, si existeix, el match corresponent a l'id de match passat (en el cas del GET és obligatori) si està dins de la competició corresponent a l'id de competició passat.
 
-    -   post: afegir un equip a una competició concreta donada tota la informació d'un equip en estructura JSON. En el primer cas en que es passen els dos ID, el que es fa amb la part de payload del JSON amb la info de l'equip és simplement COMPROVAR que el que hi ha a la BD amb ID == ID_team correspon amb el que es rep en el JSON. En cas contrari es dona un error.
-    En el segon cas en que no es passa l'ID del equip, s'intenta buscar un equip amb les constraints úniques i s'intenta afegir a la competició. En cas contrari retornarem error.        
+    -   post: té dos comportaments. 
+        1. Si s'especifica id del match:
+            * Afegeix el match dintre de la competició, comprovant abans si no està afegit ja. En ambdós casos, retorna la informació de la competició.
+        2. Si no s'especifica l'id del match:
+            * Crea el match amb la informació del JSON de la request i el guarda a la base de dades, comprovant abans que el match no existeixi. 
+            * Afegeix el match acabat de crear dins de la competició. Retorna la informació de la competició.
 
-    -   delete: eliminar un equip d'una competició donat ambdós id's.
+    -   delete: elimina el match concret de la competició especificada. Retorna la informació de la competició
 
     **TeamMatchesList**:
 
