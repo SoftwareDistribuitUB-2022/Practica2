@@ -57,23 +57,23 @@ Sessió 1
 
 Sessió 2
 =========
-- 13 d'abril [Sessió 2](https://github.com/SoftwareDistribuitUB-2022/Practica2/blob/main/Sessio_2.md)
+- 20 d'abril [Sessió 2](https://github.com/SoftwareDistribuitUB-2022/Practica2/blob/main/Sessio_2.md)
 
 Sessió 3
 =========
-- 20 d'abril [Sessió 3](https://github.com/SoftwareDistribuitUB-2002/Practica2/blob/main/Sessio_3.md)
+- 27 d'abril [Sessió 3](https://github.com/SoftwareDistribuitUB-2002/Practica2/blob/main/Sessio_3.md)
 
 Sessió 4
 =========
-- 27 d'abril [Sessió 4](https://github.com/SoftwareDistribuitUB-2022/Practica2/blob/main/Sessio_4.md)
+- 4 de Maig [Sessió 4](https://github.com/SoftwareDistribuitUB-2022/Practica2/blob/main/Sessio_4.md)
 
 Sessió 5
 =========
-- 4 de Maig [Sessió 5](https://github.com/SoftwareDistribuitUB-2022/Practica2/blob/main/Sessio_5.md)
+- 11 de Maig [Sessió 5](https://github.com/SoftwareDistribuitUB-2022/Practica2/blob/main/Sessio_5.md)
 
 Sessió 6
 =========
-- 11 de Maig [Sessió 6](https://github.com/SoftwareDistribuitUB-2022/Practica2/blob/main/Sessio_6.md)
+- 18 de Maig [Sessió 6](https://github.com/SoftwareDistribuitUB-2022/Practica2/blob/main/Sessio_6.md)
 
 Sessió 7
 =========
