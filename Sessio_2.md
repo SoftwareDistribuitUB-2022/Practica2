@@ -368,8 +368,8 @@ Comproveu que tot i que no hem associat el camp `competition_id` de MatchesModel
 
 Filtres avançats:
 
-    >>> match = MatchesModel.query.filter_by(id=1).filter(MatchesModel.teams.any(name='Karasuno')).first()
-    >>> match.competition
+    >>> match = MatchesModel.query.filter_by(id=1).filter(CompetitionsModel.teams.any(name='Karasuno')).first()
+    >>> match.competition.name
     "Annual Prefectural Volleyball Tournament"
 
 Filtres que fan servir diverses taules enllaçades(`join`):
