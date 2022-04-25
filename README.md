@@ -61,7 +61,7 @@ Sessió 2
 
 Sessió 3
 =========
-- 27 d'abril [Sessió 3](https://github.com/SoftwareDistribuitUB-2002/Practica2/blob/main/Sessio_3.md)
+- 27 d'abril [Sessió 3](https://github.com/SoftwareDistribuitUB-2022/Practica2/blob/main/Sessio_3.md)
 
 Sessió 4
 =========
