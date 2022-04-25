@@ -89,7 +89,7 @@ competitions = [
     'category': 'Senior',
     'sport': 'Basketball',
     'teams': []},
-    {'id': 1,
+    {'id': 3,
     'name': "1st Division League",
     'category': 'Junior',
     'sport': 'Futsal',
