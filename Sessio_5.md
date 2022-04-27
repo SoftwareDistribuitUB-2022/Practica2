@@ -169,7 +169,7 @@ from db import db, secret_key
             >>>new_account.json()
             {'username': 'admin', 'is_admin': 1, 'available_money': 200}
 
-  - En aquest moment podem fer un cop d'ull a l'aspecte d'una contrasenya amb hash:
+ - En aquest moment podem fer un cop d'ull a l'aspecte d'una contrasenya amb hash:
 
 			>>>new_account.password
             '$6$rounds=656000$GelL4xX9ZikfYQ7r$C81e1B9ic.1kXDn3DO2HlsRDazIIWWxI36pIj5cWEkLPDNtPsul/JU8Id1nyWRieZfqK90rv5Dy7zP4OcQG4s1' 
@@ -181,9 +181,8 @@ from db import db, secret_key
             >>>session.add(new_account)
             >>>session.commit()
             >>>session.close()
-            
-            
-	- Comproveu si el nou usuari es troba a la taula d'accounts:
+                   
+ - Comproveu si el nou usuari es troba a la taula d'accounts:
 
 				>>>r = requests.get('http://127.0.0.1:5000/accounts')
        		>>>r.json()
@@ -193,7 +192,7 @@ from db import db, secret_key
                {'username': 'user', 'is_admin': 0, 'available_money': 200}],
               {'username': 'admin', 'is_admin': 1, 'available_money': 200}]}
 
-	-  Obteniu el token de /login:
+ -  Obteniu el token de /login:
 
 			>>>r = requests.post('http://127.0.0.1:5000/login', data = {'username':'user', 'password':'1234'})
             >>>r
@@ -205,7 +204,7 @@ from db import db, secret_key
 			'eyJhbGciOiJIUzUxMiIsImlhdCI6MTU4ODQ0MzI2MywiZXhwIjoxNTg4NDQzODYzfQ.eyJ1c2VybmFtZSI6InVzZXIxIn0.Ljh3fTLiFlkVNatfdByiosdOUWesjDHMvxr_5SQeml0leGSdByVGFhl4_i7ZNQD0duu_TbdygcmqDYTLqf-XAQ' 
            	
 
-	- Comproveu si el token prové del nostre usuari (el farem servir en altres exercicis):
+ - Comproveu si el token prové del nostre usuari (el farem servir en altres exercicis):
 
 
 		    >>>from from jwt import encode, decode, ExpiredSignatureError, InvalidSignatureError
@@ -293,7 +292,7 @@ Login Frontend
 
 Comencem pel disseny del component. En primer lloc, creeu-ne un de nou component anomenat `Login.vue`. A més, aneu al fitxer `index.js` i afegiu la ruta:
 
-```html
+```javascript
 import Vue from 'vue'
 import Router from 'vue-router'
 import Shows from '@/components/Shows.vue'
@@ -332,61 +331,66 @@ Comprova si el nostre nom d’usuari i contrasenya ja estan registrats. Per comp
 Per fer-ho, podem utilitzar `vmodel=”username”` i `vmodel=”password”`:
 
 ```html
-	<div class="form-label-group">
-      <label for="inputEmail">Username</label>
-      <input type="username" id="inputUsername" class="form-control"
-      placeholder="Username" required autofocus v-model="username">
-    </div>
-    <div class="form-label-group">
-      <br>
-      <label for="inputPassword">Password</label>
-      <input type="password" id="inputPassword" class="form-control"
-      placeholder="Password" required v-model="password">
-    </div>
-
+<div class="form-label-group">
+  <label for="inputEmail">Username</label>
+  <input type="username" id="inputUsername" class="form-control"
+  placeholder="Username" required autofocus v-model="username">
+</div>
+<div class="form-label-group">
+  <br>
+  <label for="inputPassword">Password</label>
+  <input type="password" id="inputPassword" class="form-control"
+  placeholder="Password" required v-model="password">
+</div>
 ```
 On el nom d'usuari i la contrasenya són variables creades a `data()-> return`.
 
-	data () {
-        return {
-          username: '',
-          password: '',
+```javascript
+data () {
+  return {
+    username: '',
+    password: '',
+```
           
 Per comprovar l’usuari, hem de fer POST a /login per obtenir el token que utilitzarem més endavant:
 
-```html
+```javascript
 checkLogin () {
-          const parameters = {
-            username: this.username,
-            password: this.password
-          }
-          const path = `http://localhost:5000/login`
-          axios.post(path, parameters)
-            .then((res) => {
-              this.logged = true
-              this.token = res.data.token
-              this.find_match = true
-              this.getAccount()
-            })
-            .catch((error) => {
-              // eslint-disable-next-line
-              console.error(error)
-              this.user = ''
-              alert('Username or Password incorrect')
-            })
-        },
+  const parameters = {
+    username: this.username,
+    password: this.password
+  }
+  const path = 'http://localhost:5000/login'
+  axios.post(path, parameters)
+    .then((res) => {
+      this.logged = true
+      this.token = res.data.token
+      this.find_match = true
+      this.getAccount()
+    })
+    .catch((error) => {
+      // eslint-disable-next-line
+      console.error(error)
+      this.user = ''
+      alert('Username or Password incorrect')
+    })
+},
 ```
    D’altra banda, hi ha una eina per canviar la ruta actual del component un altre:
 
-	    this.$router.replace({ path: '/', query: { username: this.username, logged: this.logged } })
+```javascript
+this.$router.replace({ path: '/', query: { username: this.username, logged: this.logged } })
+```
 
 Necessitareu informació sobre l’usuari que la passem mitjançant una consulta. "username" conté el nom d'usuari actual, "logged" és un booleà que mostra si l'usuari ha iniciat la sessió correctament i altres característiques que implementarem en el proper exercici.
 
 Per consumir la informació de la consulta des de la vista `shows`, podem utilitzar la línia següent a `created()`:
 
-	 created () {
-        this.logged = this.$route.query.logged
-        this.username = this.$route.query.username
+```javascript
+created () {
+  this.logged = this.$route.query.logged
+  this.username = this.$route.query.username
+```
         
 ### Exercici 4:
  
@@ -412,19 +416,19 @@ Abans d’enviar POST hauríem de plantejar-nos com obtenir les dades a enviar. 
 En el nostre formulari, hem de recopilar la informació necessària per enviar-la a Flask per POST o PUT.
 Primer de tot, hem de crear un objecte per emmagatzemar les dades:
 
-```html
+```javascript
 addUserForm: {
-        username: '',
-        password: ''
-      }
+  username: '',
+  password: ''
+}
 ```
 A continuació, creeu un mètode d'objecte inicialitzador:
 
-```html
+```javascript
 initForm () {
-      this.addUserForm.username = ''
-      this.addUserForm.password = ''
-    },
+  this.addUserForm.username = ''
+  this.addUserForm.password = ''
+},
 ```
 Després de definir l’objecte, s’ha de completar mitjançant un formulari (<https://bootstrap-vue.org/docs/components/form>).
 Després, mitjançant el mètode onSubmit hauríem de cridar el mètode a POST. Finalment, crideu al mètode initForm per reiniciar els paràmetres.
@@ -434,15 +438,15 @@ Després, mitjançant el mètode onSubmit hauríem de cridar el mètode a POST. 
 1. Creeu un formulari per desar les dades
 2.  Creeu un mètode POST per enviar les noves dades d'usuari mitjançant path i paràmetres:
 
- ```html
-    const path = 'http://localhost:5000/account'
-    ```
+```javascript
+const path = 'http://localhost:5000/account'
+```
 
-    ```html
-    const parameters = {
-          username: this.addUserForm.username,
-          password: this.addUserForm.password
-          } 
+```javascript
+const parameters = {
+  username: this.addUserForm.username,
+  password: this.addUserForm.password
+} 
 ```
 
 3. Alerta a l'usuari si el compte s'ha creat o ja existeix
@@ -453,7 +457,7 @@ Botó Back To Matches
 Torna a la pàgina dels partits, però envia informació diferent amb la query,
 tal com ho fa el botó SIGN IN.  En aquest cas, logged = False i el nom d'usuari no són necessaris.
 
-```html
+```javascript
 this.logged = false
 this.$router.replace({ path: '/', query: { logged: this.logged } })
 ```
@@ -467,21 +471,21 @@ Comprar amb seguretat
 
 Per proporcionar seguretat per a les compres de cada usuari, hauríem d’utilitzar el token obtingut quan l’usuari prem INICIAR SESSIÓ. Per fer-ho, a l’addPurchase (paràmetres) que ja heu creat a l’última sessió, canvieu-lo per:
 
-```html
+```javascript
 addPurchase (parameters) {
-      const path = `http://localhost:5000/order/${this.username}`
-      axios.post(path, parameters, {
-        auth: {username: this.token}
-      })
-        .then(() => {
-          console.log('Order done')
-        })
-        .catch((error) => {
-          // eslint-disable-next-line
-          console.log(error)
-          this.getEvents()
-        })
-    },
+  const path = 'http://localhost:5000/order/${this.username}'
+  axios.post(path, parameters, {
+    auth: {username: this.token}
+  })
+    .then(() => {
+      console.log('Order done')
+    })
+    .catch((error) => {
+      // eslint-disable-next-line
+      console.log(error)
+      this.getEvents()
+    })
+},
 ```
 
 Fixeu-vos que estem utilitzant paràmetres d'autenticació amb token com a nom d'usuari.
