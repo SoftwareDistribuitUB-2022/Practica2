@@ -11,9 +11,9 @@ Al final d'aquesta part, hauríem de veure el següent disseny:
 
 ![image](figures/sessio-3_final-signin.png)
 
-**Vista Matches sense usuari Loggat**
+<!-- **Vista Matches sense usuari Loggat**
 
-![image](figures/sessio-3_final-matches.png)
+![image](figures/sessio-3_final-matches.png) -->
 
 **Vista Matches amb l'usuari loggat**
 
