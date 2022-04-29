@@ -4,8 +4,8 @@ Sessió 3
 Diseeny Web
 -----
 
-En aquesta part, desenvoluparem el frontend de la nostra aplicació.
-Al final d'aquesta part, hauríem de veure el següent disseny:
+En aquesta segona part de la pràctica, desenvoluparem el frontend de la nostra aplicació.
+A partir de les sessions 5 o 6, hauríem de veure el següent disseny:
 
 **Vista LOG IN**
 
