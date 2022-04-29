@@ -119,100 +119,110 @@ from db import db, secret_key
 
 ### Exercici 2:
 
-1. Creeu un login.py nou a la carpeta de recursos amb el mètode post (`api.add_ resource(Login, '/login')`):
-	- **post**(self):
-		- `username` i `password` com a paràmetres obligatoris de la sol·licitud. 
-		-  Comproveu si aquest "nom d'usuari" i "contrasenya" corresponen a un dels nostres usuaris (utilitzeu **verify\_password**) i retorneu un token vàlid (utilitzeu **generate\_auth\_token** sobre l'usuari retornat):
+1. Creeu un login.py nou a la carpeta de recursos amb el mètode post (`api.add_resource(Login, '/login')`) **post**(self):
+    - `username` i `password` com a paràmetres obligatoris de la sol·licitud. 
+    -  Comproveu si aquest "nom d'usuari" i "contrasenya" corresponen a un dels nostres usuaris (utilitzeu **verify\_password**) i retorneu un token vàlid (utilitzeu **generate\_auth\_token** sobre l'usuari retornat):
 
-	```python
+        ```python
         return {'token': token.decode('ascii')}, 200
-    ```
+        ```
         
-   - torna un missatge descriptiu i 404 si no es troba l'usuari
-   - torna un missatge descriptiu i 400 si la contrasenya no és vàlida
+    - torna un missatge descriptiu i 404 si no es troba l'usuari
+    - torna un missatge descriptiu i 400 si la contrasenya no és vàlida
 
 2. Valideu-ho amb la creació de dos usuaris (un amb privilegis d'administrador) si l'inici de sessió funciona correctament. Podeu utilitzar els següents exemples de terminals:
     
-  - Obteniu tots els comptes corrents:
+    - Obteniu tots els comptes corrents:
    
-   			>>>import requests
-   			>>>r = requests.get('http://127.0.0.1:5000/accounts')
-   			>>>r.json()
-            {'accounts': [{'username': 'npujol', 'is_admin': 0, 'available_money': 20},
-                            {'username': 'test', 'is_admin': 0, 'available_money': 200},
-                            {'username': 'user1', 'is_admin': 0, 'available_money': 20}]} 
- - 	Afegiu un compte nou (sense privilegis d'administrador):
+      ```python
+      >>> import requests
+      >>> r = requests.get('http://127.0.0.1:5000/accounts')
+      >>> r.json()
+      {'accounts': [
+        {'username': 'npujol', 'is_admin': 0, 'available_money': 20},
+        {'username': 'test', 'is_admin': 0, 'available_money': 200},
+        {'username': 'user1', 'is_admin': 0, 'available_money': 20}
+      ]} 
+      ```
+
+    - Afegiu un compte nou (sense privilegis d'administrador):
  
- 		 	>>>r = requests.post('http://127.0.0.1:5000/account', data = {'username':'user', 'password':'1234'})
-            >>>r.json()
-             {'username': 'user', 'is_admin': 0, 'available_money': 200}
-
-            >>>r
-            <Response [201]>
-
-            >>>r = requests.get('http://127.0.0.1:5000/accounts')
-            >>>r.json()
-            {'accounts': [{'username': 'npujol', 'is_admin': 0, 'available_money': 20},
-                     {'username': 'test', 'is_admin': 0, 'available_money': 200},
-                     {'username': 'user1', 'is_admin': 0, 'available_money': 20},
-                     {'username': 'user', 'is_admin': 0, 'available_money': 200}]}
+      ```python
+      >>> data = {'username':'user', 'password':'1234'}
+      >>> r = requests.post('http://127.0.0.1:5000/account', data=data)
+      >>> r.json()
+      {'username': 'user', 'is_admin': 0, 'available_money': 200}
+      >>> r
+      >>> r = requests.get('http://127.0.0.1:5000/accounts')
+      >>> r
+      <Response [201]>
+      >>> r.json()
+      {'accounts': [
+        {'username': 'npujol', 'is_admin': 0, 'available_money': 20},
+        {'username': 'test', 'is_admin': 0, 'available_money': 200},
+        {'username': 'user1', 'is_admin': 0, 'available_money': 20},
+        {'username': 'user', 'is_admin': 0, 'available_money': 200}
+      ]}
+      ```
                      
- - Afegiu un account nou (amb privilegis d'administrador, amb el Terminal):
+    - Afegiu un account nou (amb privilegis d'administrador, amb el terminal de flask):
 
- 			>>> from models.accounts import AccountsModel
-            >>>from models.orders import OrdersModel
-            >>>from models.shows import ShowModel
-            >>>from models.artist import ArtistModel
-            >>>from db import db
-            >>>new_account = AccountsModel(username='admin', is_admin=1)
-            >>>new_account.hash_password('admin') #'username:'admin', password:'admin'
-            >>>new_account.json()
-            {'username': 'admin', 'is_admin': 1, 'available_money': 200}
+      ```python
+      >>> from models.accounts import AccountsModel
+      >>> from db import db
+      >>> new_account = AccountsModel(username='admin', is_admin=1)
+      >>> new_account.hash_password('admin')
+      >>> new_account.save_to_db()
+      ```
 
- - En aquest moment podem fer un cop d'ull a l'aspecte d'una contrasenya amb hash:
+    - En aquest moment podem fer un cop d'ull a l'aspecte d'una contrasenya amb hash:
 
-			>>>new_account.password
-            '$6$rounds=656000$GelL4xX9ZikfYQ7r$C81e1B9ic.1kXDn3DO2HlsRDazIIWWxI36pIj5cWEkLPDNtPsul/JU8Id1nyWRieZfqK90rv5Dy7zP4OcQG4s1' 
-			  >>>from sqlalchemy import create_engine
-            >>>from sqlalchemy.orm import sessionmaker
-            >>>engine = create_engine('sqlite:///data.db')
-            >>>Session = sessionmaker(bind=engine)
-            >>>session = Session()
-            >>>session.add(new_account)
-            >>>session.commit()
-            >>>session.close()
+      ```python
+      >>> new_account.json()
+      {'username': 'admin', 'is_admin': 1, 'available_money': 200}
+      >>> new_account.password
+      '$6$rounds=656000$GelL4xX9ZikfYQ7r$C81e1B9ic.1kXDn3DO2HlsRDazIIWWxI36pIj5cWEkLPDNtPsul/JU8Id1nyWRieZfqK90rv5Dy7zP4OcQG4s1'
+      ```
                    
- - Comproveu si el nou usuari es troba a la taula d'accounts:
+    - Comproveu si el nou usuari es troba a la taula d'accounts:
 
-				>>>r = requests.get('http://127.0.0.1:5000/accounts')
-       		>>>r.json()
-            {'accounts': [{'username': 'npujol', 'is_admin': 0, 'available_money': 20},
-              {'username': 'test', 'is_admin': 0, 'available_money': 200},
-              {'username': 'user1', 'is_admin': 0, 'available_money': 20},
-               {'username': 'user', 'is_admin': 0, 'available_money': 200}],
-              {'username': 'admin', 'is_admin': 1, 'available_money': 200}]}
+      ```python
+      >>> r = requests.get('http://127.0.0.1:5000/accounts')
+      >>> r.json()
+      {'accounts': [
+        {'username': 'npujol', 'is_admin': 0, 'available_money': 20},
+        {'username': 'test', 'is_admin': 0, 'available_money': 200},
+        {'username': 'user1', 'is_admin': 0, 'available_money': 20},
+        {'username': 'user', 'is_admin': 0, 'available_money': 200}],
+        {'username': 'admin', 'is_admin': 1, 'available_money': 200}
+      ]}
+      ```
 
- -  Obteniu el token de /login:
+    -  Obteniu el token de /login:
 
-			>>>r = requests.post('http://127.0.0.1:5000/login', data = {'username':'user', 'password':'1234'})
-            >>>r
-            <Response [200]>
-            >>>r.json()
-            {'token': 'eyJhbGciOiJIUzUxMiIsImlhdCI6MTU4ODQ0MzI2MywiZXhwIjoxNTg4NDQzODYzfQ.eyJ1c2VybmFtZSI6InVzZXIxIn0.Ljh3fTLiFlkVNatfdByiosdOUWesjDHMvxr_5SQeml0leGSdByVGFhl4_i7ZNQD0duu_TBdygcmqDYTLqf-XAQ'}
-            >>>data = r.json()
-            >>>data['token']
-			'eyJhbGciOiJIUzUxMiIsImlhdCI6MTU4ODQ0MzI2MywiZXhwIjoxNTg4NDQzODYzfQ.eyJ1c2VybmFtZSI6InVzZXIxIn0.Ljh3fTLiFlkVNatfdByiosdOUWesjDHMvxr_5SQeml0leGSdByVGFhl4_i7ZNQD0duu_TbdygcmqDYTLqf-XAQ' 
+        ```python
+        >>> data = {'username': 'user', 'password': '1234'}
+        >>> r = requests.post('http://127.0.0.1:5000/login', data=data)
+        >>> r
+        <Response [200]>
+        >>> r.json()
+        {'token': 'eyJhbGciOiJIUzUxMiIsImlhdCI6MTU4ODQ0MzI2MywiZXhwIjoxNTg4NDQzODYzfQ.eyJ1c2VybmFtZSI6InVzZXIxIn0.Ljh3fTLiFlkVNatfdByiosdOUWesjDHMvxr_5SQeml0leGSdByVGFhl4_i7ZNQD0duu_TBdygcmqDYTLqf-XAQ'}
+        >>> data = r.json()
+        >>> data['token']
+        'eyJhbGciOiJIUzUxMiIsImlhdCI6MTU4ODQ0MzI2MywiZXhwIjoxNTg4NDQzODYzfQ.eyJ1c2VybmFtZSI6InVzZXIxIn0.Ljh3fTLiFlkVNatfdByiosdOUWesjDHMvxr_5SQeml0leGSdByVGFhl4_i7ZNQD0duu_TbdygcmqDYTLqf-XAQ' 
+        ```
            	
 
- - Comproveu si el token prové del nostre usuari (el farem servir en altres exercicis):
+    - Comproveu si el token prové del nostre usuari (el farem servir en altres exercicis):
 
-
-		    >>>from from jwt import encode, decode, ExpiredSignatureError, InvalidSignatureError
-            >>>my_token = data['token']
-            >>>secret_key = "1q2s3f5g7jggujbffrhnbcdgh78jbhd"
-            >>>data = decode(my_token, secret_key, algorithms=["HS256"])
-            >>>data
-            {'username': 'user'}   
+      ```python
+      >>> from jwt import encode, decode
+      >>> my_token = data['token']
+      >>> secret_key = "1q2s3f5g7jggujbffrhnbcdgh78jbhd"
+      >>> data = decode(my_token, secret_key, algorithms=["HS256"])
+      >>> data
+      {'username': 'user', 'exp': 1651084847}  
+      ``` 
             
 ### EndPoints amb comprovació de permisos.
  
@@ -252,10 +262,10 @@ def get_user_roles(user):
 
 3. Afegiu el decorador relacionat amb les funcions anteriors per als mètodes post de `resources/orders.py` (importeu tots els mòduls necessaris)
 
-	```python
-		@auth.login_required(role='user')
-        def post(self, username):  
-	```
+    ```python
+      @auth.login_required(role='user')
+          def post(self, username):  
+    ```
 
 	Aquest decorador cridarà **verify\_password** i, com que es defineix un rol, també cridarà **get\_user\_role**. Només podrà utilitzar el mètode POST si és un usuari "registrat" ​​amb rol "usuari". Afegirem un token vàlid al mètode POST per a poder validar aquest usuari.
 
@@ -265,25 +275,37 @@ def get_user_roles(user):
 
 	- Si no ho heu fet abans, assegureu-vos que l'usuari tingui prou diners per comprar i que hi hagi prou bitllets disponibles i torneu el "missatge" descriptiu i el codi si passa això. Comproveu aquests valors fins i tot si us ocupeu d'això a frontend (mai no sabeu quines aplicacions poden utilitzar la vostra API)
 
-	Podeu comprovar que aquesta part funciona correctament seguint aquests exemples de terminal, però primer obteniu un token vàlid de `/login` i després:
+    Podeu comprovar que aquesta part funciona correctament seguint aquests exemples de terminal, però primer obteniu un token vàlid de `/login` i després:
 
- 		>>>from requests.auth import HTTPBasicAuth
-    	>>>r = requests.post('http://127.0.0.1:5000/order/user', data = {'match_id':2, 'tickets_bought':2}, auth=HTTPBasicAuth(my_token, ''))
-    	>>>r
+      ```python
+      >>> from requests.auth import HTTPBasicAuth
+      >>> url = 'http://127.0.0.1:5000/order/user'
+      >>> data = {'match_id': 2, 'tickets_bought': 2}
+      >>> auth = HTTPBasicAuth(my_token, '')
+      >>> r = requests.post(url, data=data, auth=auth)
+      >>> r
     	<Response [201]>
-
-   		 >>>r.json()
-    	{'match_id': 2,
-    	 'tickets_bought': 2,
-    	 'username': 'user'}
+      >>> r.json()
+      {
+        'match_id': 2,
+        'tickets_bought': 2,
+        'username': 'user'
+      }
+      ``` 
      
-  	Proveu el mateix però amb endponits amb nom d'usuari diferents:
+    Proveu el mateix però amb endponits amb nom d'usuari diferents:
   
- 		>>>r = requests.post('http://127.0.0.1:5000/order/npujol', data = {'match_id':2, 'tickets_bought':2},auth=HTTPBasicAuth(my_token, ''))
-   		 >>>r
-   		 <Response [400]>
-    	>>>r.json()
-    	{"message": "Bad authorization user"}
+      ```python
+      >>> url = 'http://127.0.0.1:5000/order/npujol'
+      >>> data = {'match_id': 2, 'tickets_bought': 2}
+      >>> auth = HTTPBasicAuth(my_token, '')
+      >>> r = requests.post(url, data=data, auth=auth)
+      >>> r
+      <Response [400]>
+      >>>r.json()
+      {"message": "Bad authorization user"}
+      ``` 
+
 4. Afegiu el decorador `login_required(role='admin')` a tots els mètodes que creieu que només podrien restringir-se a l'administrador (normalment relacionats amb afegir, suprimir o modificar dades).
 Feu una prova manual addicional per assegurar-vos que la vostra API funciona correctament amb requests o Postman.
 
@@ -318,8 +340,8 @@ export default new Router({
 })
 ```
 Un cop l'estructura estigui llesta, podem dissenyar la vista d'inici de sessió com:
-![image](figures/sessio-5_login.png)
 
+![image](figures/sessio-5_login.png)
 
 Com podeu veure, tenim dos textos d’entrada i tres botons.
 Si parem atenció a cada botó:
@@ -384,7 +406,7 @@ this.$router.replace({ path: '/', query: { username: this.username, logged: this
 
 Necessitareu informació sobre l’usuari que la passem mitjançant una consulta. "username" conté el nom d'usuari actual, "logged" és un booleà que mostra si l'usuari ha iniciat la sessió correctament i altres característiques que implementarem en el proper exercici.
 
-Per consumir la informació de la consulta des de la vista `shows`, podem utilitzar la línia següent a `created()`:
+Per consumir la informació de la consulta des de la vista `Matches`, podem utilitzar la línia següent a `created()`:
 
 ```javascript
 created () {
@@ -397,7 +419,7 @@ created () {
  1. Creeu un usuari mitjançant el shell de Flask si encara no teniu cap usuari a la base de dades creat. 
  2. Creeu un mètode getAccount() que faci un GET al backend per mirar si l'usuari, que ha iniciat sessió, és administrador o no i deseu-lo en una variable anomenada `is_admin`
  3. Creeu una alerta per mostrar si l’usuari ha iniciat la sessió.
- 4. Canvieu la ruta actual a '/' desant la informació actual mitjançant la query i consumeix la informació del component Show '/' a created ():
+ 4. Canvieu la ruta actual a '/' desant la informació actual mitjançant la query i consumeix la informació del component Match '/' a created ():
  	 -  username
 
     -   logged
