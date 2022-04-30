@@ -339,7 +339,7 @@ export default new Router({
   ]
 })
 ```
-Un cop l'estructura estigui llesta, podem dissenyar la vista d'inici de sessió com:
+Un cop l'estructura estigui llesta, podem dissenyar la vista d'inici de sessió com per exemple:
 
 ![image](figures/sessio-5_login.png)
 
@@ -349,8 +349,7 @@ Si parem atenció a cada botó:
 Botó Log In
 -------
 
-Comprova si el nostre nom d’usuari i contrasenya ja estan registrats. Per comprovar això, primer hem de desar el nom d'usuari i la contrasenya escrits per l'usuari.
-Per fer-ho, podem utilitzar `vmodel=”username”` i `vmodel=”password”`:
+Comprova si el nostre nom d’usuari i contrasenya ja estan registrats. Per comprovar això, primer hem de desar el nom d'usuari i la contrasenya escrits per l'usuari. Per fer-ho, podem utilitzar `vmodel=”username”` i `vmodel=”password”`:
 
 ```html
 <div class="form-label-group">
@@ -365,13 +364,17 @@ Per fer-ho, podem utilitzar `vmodel=”username”` i `vmodel=”password”`:
   placeholder="Password" required v-model="password">
 </div>
 ```
+
 On el nom d'usuari i la contrasenya són variables creades a `data()-> return`.
 
 ```javascript
 data () {
   return {
-    username: '',
-    password: '',
+    logged: false,
+    username: null,
+    password: null,
+    token: null
+  }
 ```
           
 Per comprovar l’usuari, hem de fer POST a /login per obtenir el token que utilitzarem més endavant:
@@ -387,46 +390,40 @@ checkLogin () {
     .then((res) => {
       this.logged = true
       this.token = res.data.token
-      this.find_match = true
-      this.getAccount()
+      this.$router.push({ path: '/', query: { username: this.username, logged: this.logged, token: this.token } })
     })
     .catch((error) => {
       // eslint-disable-next-line
       console.error(error)
-      this.user = ''
       alert('Username or Password incorrect')
     })
 },
 ```
-   D’altra banda, hi ha una eina per canviar la ruta actual del component un altre:
+
+Observem que estem fent servir una eina per canviar la ruta actual del component un altre:
 
 ```javascript
-this.$router.replace({ path: '/', query: { username: this.username, logged: this.logged } })
+this.$router.push({ path: '/', query: { username: this.username, logged: this.logged, token: this.token } })
 ```
 
-Necessitareu informació sobre l’usuari que la passem mitjançant una consulta. "username" conté el nom d'usuari actual, "logged" és un booleà que mostra si l'usuari ha iniciat la sessió correctament i altres característiques que implementarem en el proper exercici.
+Els parametres uqe passem ens permeten donar a la vista principal l'informació sobre l’usuari. "username" conté el nom d'usuari actual, "logged" és un booleà que mostra si l'usuari ha iniciat la sessió correctament i "token" és la string del token per a poder enviar requests autoritzades.
 
-Per consumir la informació de la consulta des de la vista `Matches`, podem utilitzar la línia següent a `created()`:
+Per consumir la informació de la consulta des de la vista `Matches`, hem d'inicialitzar els atributs a data i podem utilitzar les línies següents a `created()`:
 
 ```javascript
 created () {
-  this.logged = this.$route.query.logged
+  this.logged = this.$route.query.logged === 'true'
   this.username = this.$route.query.username
+  this.token = this.$route.query.token
+  if (this.logged === undefined) {
+    this.logged = false
+  }
 ```
         
 ### Exercici 4:
  
  1. Creeu un usuari mitjançant el shell de Flask si encara no teniu cap usuari a la base de dades creat. 
- 2. Creeu un mètode getAccount() que faci un GET al backend per mirar si l'usuari, que ha iniciat sessió, és administrador o no i deseu-lo en una variable anomenada `is_admin`
- 3. Creeu una alerta per mostrar si l’usuari ha iniciat la sessió.
- 4. Canvieu la ruta actual a '/' desant la informació actual mitjançant la query i consumeix la informació del component Match '/' a created ():
- 	 -  username
-
-    -   logged
-
-    -   is\_admin
-
-    -   token
+ 2. Creeu un mètode getAccount() a `Matches` que faci un GET al backend per mirar si l'usuari, que ha iniciat sessió, és administrador o no i deseu-lo en una variable anomenada `is_admin`.
 
 Botó Create Account
 --------------
@@ -476,12 +473,10 @@ const parameters = {
 Botó Back To Matches
 --------------
 
-Torna a la pàgina dels partits, però envia informació diferent amb la query,
-tal com ho fa el botó SIGN IN.  En aquest cas, logged = False i el nom d'usuari no són necessaris.
+Torna a la pàgina dels partits, però envia informació diferent amb la query, tal com ho fa el botó SIGN IN. En aquest cas, només cal enviar:
 
 ```javascript
-this.logged = false
-this.$router.replace({ path: '/', query: { logged: this.logged } })
+this.$router.push({ path: '/' })
 ```
 ### Exercici 6:
 
@@ -500,21 +495,17 @@ addPurchase (parameters) {
     auth: {username: this.token}
   })
     .then(() => {
-      console.log('Order done')
+      ...
     })
     .catch((error) => {
-      // eslint-disable-next-line
-      console.log(error)
-      this.getEvents()
+      ...
     })
 },
 ```
 
 Fixeu-vos que estem utilitzant paràmetres d'autenticació amb token com a nom d'usuari.
 
-
 ### Informació d’usuaris i partits
-
 
 Per deixar clara la interacció de l'usuari, hauríem de mostrar-li la informació següent:
 

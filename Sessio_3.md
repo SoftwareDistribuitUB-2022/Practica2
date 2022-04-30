@@ -5,15 +5,15 @@ Diseeny Web
 -----
 
 En aquesta segona part de la pràctica, desenvoluparem el frontend de la nostra aplicació.
-A partir de les sessions 5 o 6, hauríem de veure el següent disseny:
+Al final de la sessió 5 hauríem de veure una pàgina web amb els mateixos elements que el següent exemple:
 
 **Vista LOG IN**
 
 ![image](figures/sessio-3_final-signin.png)
 
-<!-- **Vista Matches sense usuari Loggat**
+**Vista Matches sense usuari Loggat**
 
-![image](figures/sessio-3_final-matches.png) -->
+![image](figures/sessio-3_final-matches.png)
 
 **Vista Matches amb l'usuari loggat**
 
