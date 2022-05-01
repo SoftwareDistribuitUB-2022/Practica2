@@ -436,17 +436,19 @@ En el nostre formulari, hem de recopilar la informació necessària per enviar-l
 Primer de tot, hem de crear un objecte per emmagatzemar les dades:
 
 ```javascript
-addUserForm: {
-  username: '',
-  password: ''
-}
+  creatingAccount: false,
+  addUserForm: {
+    username: null,
+    password: null
+  }
 ```
 A continuació, creeu un mètode d'objecte inicialitzador:
 
 ```javascript
-initForm () {
-  this.addUserForm.username = ''
-  this.addUserForm.password = ''
+initCreateForm () {
+  this.creatingAccount = true
+  this.addUserForm.username = null
+  this.addUserForm.password = null
 },
 ```
 Després de definir l’objecte, s’ha de completar mitjançant un formulari (<https://bootstrap-vue.org/docs/components/form>).
