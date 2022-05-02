@@ -4,7 +4,7 @@ Bucles
 ------
 Vue permet utilitzar bucles i és molt útil per a llistes. Imagineu-vos que tenim una llista de partits i volem mostrar la informació de cada partit per separat. Per fer-ho, creeu una llista de partits afegint una propietat a l'estructura retornada a `data ()` del component Matches:
 
-```html
+```javascript
 matches: [
   {
     'id': 1,
@@ -156,7 +156,7 @@ I per una altra banda, estem utilitzant els endpoints `/competition/<id>` per a 
 
 A més, afegiu created() sota i fora dels mètodes. Permet que el codi s’executi cada vegada que s’inicialitza la web.
 
-```html
+```javascript
 created () {
     this.getShows()
   }
@@ -197,21 +197,6 @@ class AccountsModel(db.Model):
 
 No inicialitzarem AccountModel amb una contrasenya. Veurem a les properes sessions per què, però per al proper exercici només heu de tenir una contrasenya falsa: inicialitzeu el camp de la contrasenya a la funció init del AccountModel fent "self.password = 'test'".
 
-### Exercici 3:
-1. Creeu un mètode `json()` que retorni en un json els atributs `username`, `is_admin` i `available_money`.
-
-2. Creeu un mètode per desar les dades en db
-
-3. Creeu un mètode per suprimir les dades de db
-
-4. Creeu un usuari nou mitjançant Flask shell i afegiu-lo a db:
-
-		>>> from db import db
-  		>>> from models.accounts import AccountsModel
- 		>>> test_user=AccountsModel(username='test')
- 		>>> db.session.add(test_user)
-  		>>> db.session.commit() 
-
 Un cop creat AccountsModel, creem un model i un recurs nous per desar tots els partits comprats. L'anomenarem OrdersModel. Camps de la taula de comandes:
 
 ```python
@@ -234,6 +219,23 @@ I creeu aquests punts finals (endpoints) a `app.py`:
 	api.add_resource(Orders, '/order/<string:username>')
 	api.add_resource(OrdersList, '/orders')
 ```
+
+### Exercici 3:
+1. Creeu un mètode `json()` que retorni en un json els atributs `username`, `is_admin` i `available_money`.
+
+2. Creeu un mètode per desar les dades en db
+
+3. Creeu un mètode per suprimir les dades de db
+
+4. Creeu un usuari nou mitjançant Flask shell i afegiu-lo a db:
+
+    ```python
+    >>> from db import db
+    >>> from models.accounts import AccountsModel
+    >>> test_user=AccountsModel(username='test')
+    >>> db.session.add(test_user)
+    >>> db.session.commit() 
+    ```
 
 ### Exercici 4:
 
@@ -360,7 +362,7 @@ Finalitza el botó de compra
 
 Aquest botó executa un mètode POST que desa totes les files de comanda de la base de dades:
 
-```html
+```javascript
 addPurchase (parameters) {
   const path = 'http://localhost:5000/order/test'
   axios.post(path, parameters)
@@ -376,7 +378,7 @@ addPurchase (parameters) {
 ```
 amb els paràmetres:
 
-```html
+```javascript
 const parameters = {
   match_id: this.matches_added[i].match.id,
   tickets_bought: this.matches_added[i].quantity
@@ -394,7 +396,7 @@ Ara tenim la informació per actualitzar els diners disponibles de l’usuari de
 1. Creeu un botó anomenat Finalitzar la compra
 2. Creeu un mètode POST per enviar la compra ordenada (POST per fila)
 
-    ```html
+    ```javascript
     finalizePurchase () {
       for (let i = 0; i < this.matches_added.length; i += 1) {
         const parameters = {
