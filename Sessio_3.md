@@ -177,7 +177,7 @@ Per instal·lar-lo al nostre projecte, executeu la comanda següent en la línia
 
 	npm install --save bootstrap-vue
 	
-A més, descarregueu els fitxers compilats [aquí] (https://getbootstrap.com/docs/4.0/getting-started/download/). Extreu els fitxers a una carpeta nova anomenada bootstrap dins del vostre projecte:
+A més, descarregueu els fitxers compilats [aquí](https://getbootstrap.com/docs/4.0/getting-started/download/). Extreu els fitxers a una carpeta nova anomenada bootstrap dins del vostre projecte:
 
 ![image](figures/sessio-3_bootstrap.png)
 
