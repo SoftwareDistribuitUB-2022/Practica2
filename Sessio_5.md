@@ -149,7 +149,7 @@ from db import db, secret_key
  
       ```python
       >>> data = {'username':'user', 'password':'1234'}
-      >>> r = requests.post('http://127.0.0.1:5000/account', data=data)
+      >>> r = requests.post('http://127.0.0.1:5000/account', json=data)
       >>> r.json()
       {'username': 'user', 'is_admin': 0, 'available_money': 200}
       >>> r
@@ -202,7 +202,7 @@ from db import db, secret_key
 
         ```python
         >>> data = {'username': 'user', 'password': '1234'}
-        >>> r = requests.post('http://127.0.0.1:5000/login', data=data)
+        >>> r = requests.post('http://127.0.0.1:5000/login', json=data)
         >>> r
         <Response [200]>
         >>> r.json()
@@ -282,7 +282,7 @@ def get_user_roles(user):
       >>> url = 'http://127.0.0.1:5000/order/user'
       >>> data = {'match_id': 2, 'tickets_bought': 2}
       >>> auth = HTTPBasicAuth(my_token, '')
-      >>> r = requests.post(url, data=data, auth=auth)
+      >>> r = requests.post(url, json=data, auth=auth)
       >>> r
     	<Response [201]>
       >>> r.json()
@@ -299,7 +299,7 @@ def get_user_roles(user):
       >>> url = 'http://127.0.0.1:5000/order/npujol'
       >>> data = {'match_id': 2, 'tickets_bought': 2}
       >>> auth = HTTPBasicAuth(my_token, '')
-      >>> r = requests.post(url, data=data, auth=auth)
+      >>> r = requests.post(url, json=data, auth=auth)
       >>> r
       <Response [400]>
       >>>r.json()
