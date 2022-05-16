@@ -57,21 +57,7 @@ Sabem que el servidor web Flask no és bo per a l'ús de producció perquè és 
 
 El servidor web `gunicorn` s'ha d'afegir al `requirements.txt` dins del directori de l'aplicació. Afegiu també totes les dependències dels paquets python per al vostre projecte. El fitxer `requirements.txt` hauria d'estar a l'arrel del projecte i hauria de ser així. Per conèixer les versions dels vostres paquets específics relacionats amb Flask, utilitzeu `pip freeze`.Example:
 
-```
-gunicorn==19.7
-python-decouple==3.3
-whitenoise==3.3.1
-psycopg2==2.8.2
-Flask==1.1.2
-Flask-SQLAlchemy==2.4.1
-SQLAlchemy==1.3.23
-Flask-RESTful==0.3.8
-Flask-Cors==3.0.8
-Flask-Migrate==2.5.3
-Flask-HTTPAuth==4.0.0
-passlib==1.7.2
-itsdangerous==1.1.0
-```
+
 
 ### El fitxer Procfile
 L'últim requisit és dir-li a Heroku com executar l'aplicació. Per a això, Heroku requereix un fitxer anomenat només "Procfile" a la carpeta arrel del Github.
@@ -227,16 +213,16 @@ Afegiu, fer commit i envieu tots els vostres fitxers locals al vostre repositori
 
 ```
 git add *
-git commit -a -m"ready to deploy"
+git commit -a -m "ready to deploy"
 ```
 
 Si la vostra aplicació no es troba al directori arrel del vostre repositori github, enllaceu el subdirectori on es troba:
 
-`git subtree push --prefix subdirectori_practica_github heroku master  `
+`git subtree push --prefix subdirectori_practica_github heroku main  `
 
 Si la vostra aplicació es troba a l'arrel:
 
-`git push heroku master`
+`git push heroku main`
 
 
 
