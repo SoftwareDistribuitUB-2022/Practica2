@@ -55,9 +55,20 @@ Heroku no proporciona un servidor web. En lloc d'això, espera que l'aplicació 
 
 Sabem que el servidor web Flask no és bo per a l'ús de producció perquè és un sol procés i un sol fil, de manera que necessitem un servidor millor. El tutorial Heroku per a Python suggereix `gunicorn`, un servidor web d'estil pre-fork escrit en Python, de manera que aquest és el que farem servir.
 
-El servidor web `gunicorn` s'ha d'afegir al `requirements.txt` dins del directori de l'aplicació. Afegiu també totes les dependències dels paquets python per al vostre projecte. El fitxer `requirements.txt` hauria d'estar a l'arrel del projecte i hauria de ser així. Per conèixer les versions dels vostres paquets específics relacionats amb Flask, utilitzeu `pip freeze`.Example:
+El servidor web `gunicorn` s'ha d'afegir al `requirements.txt` dins del directori de l'aplicació. Afegiu també totes les dependències dels paquets python per al vostre projecte. El fitxer `requirements.txt` hauria d'estar a l'arrel del projecte i conté el nom del paquet '==' número de versió del paquet. Per conèixer les versions dels vostres paquets específics relacionats amb Flask, utilitzeu `pip freeze`.
 
+Example:
 
+```   
+flask == num_versio
+flask-restful == num_versio
+Flask-SQLAlchemy == num_versio
+Flask-Migrate == num_versio
+flask-cors == num_versio
+passlib == num_versio
+pyjwt == num_versio
+Flask-HTTPAuth == num_versio
+```
 
 ### El fitxer Procfile
 L'últim requisit és dir-li a Heroku com executar l'aplicació. Per a això, Heroku requereix un fitxer anomenat només "Procfile" a la carpeta arrel del Github.

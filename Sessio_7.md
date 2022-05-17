@@ -64,23 +64,32 @@ Per crear un formulari en la vista, podem usar el següent codi bootstrap:
 
 * Creeu un formulari amb la ref =" addMatchModal " per recopilar les dades mitjançant Forms de bootstrap:
 
+```html
  <b-modal ref="addMatchModal"
         id="show-modal"
         title="Add new Match"
         hide-footer>
   <b-form @submit="onSubmit" @reset="onReset" v-if="show">
-  <b-form-group  .....
+  <b-form-group  .....>
+  	 <b-form-input ....> ></b-form-input> .....
+  </b-form-group>
+  <b-button type="submit" variant="primary">Submit</b-button>
+   <b-button type="reset" variant="danger">Reset</b-button>
+   </b-modal>
+  
+```
 
 * Creeu una variable per emmagatzemar les dades recollides que voldreu enviar al backend, per exemple:
 
+```
   addMachForm: {
         team1: '',
         team2: '',
         ...
       },    
-
+```
 * Creeu el mètode onSubmit cridat des del botó "Enviar":
-
+```
     onSubmit (evt) {
           evt.preventDefault()
           this.$refs.addMatchModal.hide()
@@ -91,13 +100,15 @@ Per crear un formulari en la vista, podem usar el següent codi bootstrap:
           }
           this.addMatch(parameters)
           this.initForm()
-        },      
+        },
+ ```     
 * Crea el mètode addMatch(paràmetres): hauria de cridar a una sol·licitud POST al backend. Recordeu afegir paràmetres d'autenticació a la sol·licitud POST, com ara:
-``
+
+```
 axios.post(path, parameters, {
         auth: {username: this.token}
       })        
-``     
+```     
 
 * Comproveu que en el backend s'hagi d'estar registrat com a administrador en aquest endpoint:
 
@@ -111,6 +122,7 @@ Després d'això, actualitzeu els partits disponibles.
 
 * Crea el mètode onReset cridat des del botó Reset com:
 
+```
 onReset(evt) {
        evt.preventDefault()
        this.initForm()
@@ -119,7 +131,7 @@ onReset(evt) {
        this.show = true
        })
      },
-
+```
 ### Exercicis:
 
 * Feu els Endpoints necessaris per a que el administrador pugui actualitzar les dades del model.
