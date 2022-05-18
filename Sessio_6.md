@@ -218,7 +218,7 @@ from lock import lock
 
 ### Desplegant el codi
 
-Ara podeu implementar el vostre codi:
+Ara podeu implementar el vostre codi. Recordeu que heu d'**eliminar el fitxer de base de dades i la carpeta migrations** abans de desplegar el codi!
 
 Afegiu, fer commit i envieu tots els vostres fitxers locals al vostre repositori
 
