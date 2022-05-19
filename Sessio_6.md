@@ -161,7 +161,7 @@ Afegiu una variable d'entorn amb les credencials de la base de dades creada:
 
 `heroku config:set DATABASE_URL= <<URI>>  -a <<nomgrup>-sportsmaster>`
 
-per trobar la URI aneu a la base de dades creada a heroku i aneu a Database Credentials i alla teniu la URI definida. 
+per trobar la URI aneu a la base de dades creada a heroku i aneu a Database Credentials i alla teniu la URI definida, ara bé per a que funcioni des de SQLALchemy canvieu el protocol `postgres:`de la URI per `postgresql:`
 
 	
 
