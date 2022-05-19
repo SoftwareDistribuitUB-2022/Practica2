@@ -155,6 +155,14 @@ Hauríem d'utilitzar una base de dades de producció. Heroku inclou una instànc
 
 	
 `heroku  addons:create heroku-postgresql:hobby-dev -a <<nomgrup>-sportsmaster>`
+
+Afegiu una variable d'entorn amb les credencials de la base de dades creada:
+
+
+`heroku config:set DATABASE_URL= <<URI>>  -a <<nomgrup>-sportsmaster>`
+
+per trobar la URI aneu a la base de dades creada a heroku i aneu a Database Credentials i alla teniu la URI definida. 
+
 	
 
 
@@ -218,7 +226,7 @@ from lock import lock
 
 ### Desplegant el codi
 
-Ara podeu implementar el vostre codi. Recordeu que heu d'**eliminar el fitxer de base de dades i la carpeta migrations** abans de desplegar el codi!
+Ara podeu implementar el vostre codi. Recordeu que si no teniu el fitxer de la base de dades de sqlite i la carpeta de migrations al .gitignore haureu d'**moure a un altre lloc el fitxer de base de dades i la carpeta migrations** abans de desplegar el codi, fer un commit, push sense aquests fitxers, modificar el .gitignore per afegir aquest fitxer i carpeta i tornar-los a copiar en local. Així tindreu el sqlite en local per a desenvolupament i no en remot per a produccio.
 
 Afegiu, fer commit i envieu tots els vostres fitxers locals al vostre repositori
 
