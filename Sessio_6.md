@@ -55,7 +55,7 @@ Heroku no proporciona un servidor web. En lloc d'això, espera que l'aplicació 
 
 Sabem que el servidor web Flask no és bo per a l'ús de producció perquè és un sol procés i un sol fil, de manera que necessitem un servidor millor. El tutorial Heroku per a Python suggereix `gunicorn`, un servidor web d'estil pre-fork escrit en Python, de manera que aquest és el que farem servir.
 
-El servidor web `gunicorn` s'ha d'afegir al `requirements.txt` dins del directori de l'aplicació. Afegiu també totes les dependències dels paquets python per al vostre projecte. El fitxer `requirements.txt` hauria d'estar a l'arrel del projecte i conté el nom del paquet '==' número de versió del paquet. Per conèixer les versions dels vostres paquets específics relacionats amb Flask, utilitzeu `pip freeze`.
+El servidor web `gunicorn` s'ha d'afegir al `requirements.txt` dins del directori de l'aplicació. Afegiu també totes les dependències dels paquets python per al vostre projecte. El fitxer `requirements.txt` hauria d'estar a l'arrel del projecte i conté el nom del paquet '==' número de versió del paquet. Per conèixer les versions dels vostres paquets específics relacionats amb Flask, utilitzeu `pip freeze`. Podeu volcar el contingut d'aquesta instrucció a un fitxer amb `pip freeze > requirements.txt`.
 
 Example:
 
@@ -84,7 +84,7 @@ L'etiqueta web està associada al servidor web. Heroku espera aquesta tasca i l'
 
 ### El fitxer config.py
 
-Necessitarem un fitxer `config.py` per controlar les variables de desenvolupament i entorn de producció.
+Necessitarem un fitxer `config.py` per controlar les variables de desenvolupament i entorn de producció. L'entorn de producció conté les instruccions per a que la nostra app funcioni a Heroku. Quan estiguem treballant en local, l'entorn que farem servir és el de development, que té les _settings_ per treballar en local.
  
 ```python 
 
@@ -161,9 +161,8 @@ Afegiu una variable d'entorn amb les credencials de la base de dades creada:
 
 `heroku config:set DATABASE_URL= <<URI>>  -a <<nomgrup>-sportsmaster>`
 
-per trobar la URI aneu a la base de dades creada a heroku i aneu a Database Credentials i alla teniu la URI definida, ara bé per a que funcioni des de SQLALchemy canvieu el protocol `postgres:`de la URI per `postgresql:`
+per trobar la URI aneu a la base de dades creada a heroku i aneu a Database Credentials i alla teniu la URI definida, ara bé per a que funcioni des de SQLALchemy canvieu el protocol `postgres:`de la URI per `postgresql:`. Si teniu problemes per canviar la URL, podeu executar `heroku addons:detach DATABASE -a <app_name>`.
 
-	
 
 
 ### Preparant el nostre codi anterior per a la producció.
@@ -270,6 +269,13 @@ heroku pg:psql -a <<nomgrup>-sportsmaster>
 INSERT INTO accounts VALUES(1,'admin','THE_HASH....',200);
 ```
 
+Per a comprovar que ho teniu tot bé, podeu executar també 
+
+```
+heroku pg:psql -a <<nomgrup>-sportsmaster>
+SELECT * FROM match;
+```
+On haurieu de veure tots els partits, o, `SELECT * FROM accounts;` per veure els usuaris creats amb el hash de contrasenya.
 
 Ara l'aplicació està en línia:
 
@@ -279,8 +285,6 @@ Per consultar els registres podeu accedir-hi:
 
 `heroku logs -a <<nomgrup>-sportsmaster>`
 
-
-    
 ### Tingueu en compte algunes limitacions del pla gratuït d'heroku:
 
 - L'aplicació "s'adorm" després de 30 minuts d'inactivitat. El primer accés després pot ser lent.
