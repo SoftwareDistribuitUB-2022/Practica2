@@ -172,7 +172,7 @@ Hem de preparar el nostre codi anterior per a la producció.
 * Substituïu tots els enllaços `localhost:5000` als components de vue per a `https://<<nomgrup>-sportsmaster>.herokuapp.com/`.
 * Regenera la carpeta vue `/dist`:
 `npm run build`
-* Afegiu els resultats a STATIC_FOLDER i TEMPLATE_FOLDER
+* Afegiu els resultats a STATIC_FOLDER i TEMPLATE_FOLDER (Anar a la carpeta /Dist dins de frontend, copiar `index.html` dins d'una nova carpeta a l'arrel de la app anomenada `templates`, copiar també `/Dist/static` i enganxar-la directament també a l'arrel de la app).
 * Hem de modificar totes les columnes Enum dels models per tal de posar-li un nom 
 per exemple, la columna ``category = db.Column(db.Enum(*categories_list,),nullable=False)`` hauria de quedar així: ``category = db.Column(db.Enum(*categories_list,name='categories_types'), nullable=False)``
 
