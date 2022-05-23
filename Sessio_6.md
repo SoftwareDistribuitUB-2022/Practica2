@@ -279,6 +279,8 @@ On haurieu de veure tots els partits, o, `SELECT * FROM accounts;` per veure els
 
 **Recordeu que dins del navegador, amb la pàgina oberta, podeu veure la consola pitjant F12, on podreu visualitzar qualsevol possible error**. Recordeu també que **qualsevol canvi en qualsevol fitxer en la carpeta frontend requerirà executar `npm run build`, copiar els fitxers generats en les respectives carpetes i fer push per a veure els canvis a Heroku.
 
+* També us podeu conectar a la base de dades de Postgres de Heroku fent servir DBeaver, per exemple, on per configurar una nova connexió haureu d'omplir els camps de usuari, contrasenya, nom de la db, host i port, informació que trobareu a Database credentials de Heroku. Un cop establerta la connexió podreu veure tota la informació de les db, eliminar o afegir files, etc.
+
 Ara l'aplicació està en línia:
 
 `heroku open -a <<nomgrup>-sportsmaster>`
