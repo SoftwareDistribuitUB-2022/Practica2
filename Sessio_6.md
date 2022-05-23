@@ -277,6 +277,8 @@ SELECT * FROM match;
 ```
 On haurieu de veure tots els partits, o, `SELECT * FROM accounts;` per veure els usuaris creats amb el hash de contrasenya.
 
+**Recordeu que dins del navegador, amb la pàgina oberta, podeu veure la consola pitjant F12, on podreu visualitzar qualsevol possible error**. Recordeu també que **qualsevol canvi en qualsevol fitxer en la carpeta frontend requerirà executar `npm run build`, copiar els fitxers generats en les respectives carpetes i fer push per a veure els canvis a Heroku.
+
 Ara l'aplicació està en línia:
 
 `heroku open -a <<nomgrup>-sportsmaster>`
