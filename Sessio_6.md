@@ -68,6 +68,8 @@ flask-cors == num_versio
 passlib == num_versio
 pyjwt == num_versio
 Flask-HTTPAuth == num_versio
+gunicorn	    # Engine WSGI per a Python
+psycopg2            # Driver de Postgress
 ```
 
 ### El fitxer Procfile
