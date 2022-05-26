@@ -260,7 +260,7 @@ def get_user_roles(user):
 2.  Afegeix codi a **get\_user\_roles(user)**:
 	-  Donat un objecte "AccountsModel" (aquí "user") retorna \['admin'\] si aquest usuari és is\_admin = 1 o \['user'\] en cas contrari.
 
-3. Afegiu el decorador relacionat amb les funcions anteriors per als mètodes post de `resources/orders.py` (importeu tots els mòduls necessaris)
+3. Afegiu el decorador relacionat amb les funcions anteriors per als mètodes post de `resources/orders.py` (importeu tots els mòduls necessaris i els atributs auth i g de la classe accounts del model)
 
     ```python
       @auth.login_required(role='user')
